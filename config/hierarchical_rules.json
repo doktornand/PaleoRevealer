@@ -1,0 +1,410 @@
+{
+  "_schema_version": "2.0",
+  "_description": "Système de règles hiérarchiques pour Scadassembler v2.0",
+
+  "rule_engine": {
+    "priority_levels": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"],
+    "matching_strategy": "hierarchical_cascade",
+    "conflict_resolution": "priority_override",
+    "cascade_order": [
+      "architecture_rules",
+      "format_rules", 
+      "domain_rules",
+      "pattern_rules",
+      "instruction_rules",
+      "interrupt_rules",
+      "register_rules",
+      "segment_rules",
+      "directive_rules",
+      "macro_rules",
+      "fallback_rules"
+    ]
+  },
+
+  "architecture_rules": {
+    "_priority": "CRITICAL",
+    "_description": "Règles fondamentales de changement d'architecture",
+    "rules": [
+      {
+        "id": "arch_x86_16_to_32",
+        "name": "Passage 16-bit vers 32-bit",
+        "condition": {
+          "source_arch": "x86_16",
+          "target_arch": "x86_32"
+        },
+        "transformations": {
+          "register_expansion": {
+            "AX": "EAX", "BX": "EBX", "CX": "ECX", "DX": "EDX",
+            "SI": "ESI", "DI": "EDI", "BP": "EBP", "SP": "ESP",
+            "IP": "EIP", "FLAGS": "EFLAGS"
+          },
+          "stack_operations": {
+            "PUSHF": "PUSHFD",
+            "POPF": "POPFD",
+            "PUSHA": "PUSHAD",
+            "POPA": "POPAD"
+          },
+          "memory_model": {
+            "source": ".MODEL SMALL | .MODEL MEDIUM | .MODEL LARGE | .MODEL HUGE",
+            "target": ".MODEL FLAT, STDCALL",
+            "note": "Suppression de la segmentation en mode protege"
+          }
+        },
+        "side_effects": [
+          "Les offsets de segment (CS:, DS:, ES:, SS:) deviennent des labels",
+          "Les far calls/jumps necessitent une reecriture manuelle"
+        ]
+      }
+    ]
+  },
+
+  "format_rules": {
+    "_priority": "CRITICAL",
+    "_description": "Règles de conversion des formats executables",
+    "rules": [
+      {
+        "id": "format_com_to_pe",
+        "name": "Conversion .COM vers PE",
+        "condition": {
+          "source_format": "COM",
+          "target_format": "PE"
+        },
+        "transformations": {
+          "entry_point": {
+            "source": "CS:0100h (fixe)",
+            "target": "EntryPoint RVA dans PE header",
+            "setup_code": [
+              "; Initialisation du modele FLAT",
+              ".386",
+              ".MODEL FLAT, STDCALL",
+              "OPTION CASEMAP:NONE"
+            ]
+          },
+          "memory_layout": {
+            "psp_simulation": "Allouer 256 bytes en .data pour simuler le PSP si necessaire",
+            "stack_setup": "La pile est geree par le loader PE (1MB reservee par defaut)"
+          }
+        }
+      },
+      {
+        "id": "format_mz_to_pe",
+        "name": "Conversion .EXE (MZ) vers PE",
+        "condition": {
+          "source_format": "MZ",
+          "target_format": "PE"
+        },
+        "transformations": {
+          "header_conversion": {
+            "mz_header": "Analyse par MZParser",
+            "pe_header": "Generation par PEBuilder",
+            "relocation_table": {
+              "source": "Table de relocation MZ (segment:offset)",
+              "target": "Table de relocation PE (RVA + type)",
+              "conversion": "Segment * 16 + Offset -> RVA relative a ImageBase"
+            }
+          },
+          "segments_to_sections": {
+            "mapping": {
+              "CODE segment": ".text (IMAGE_SCN_CNT_CODE | IMAGE_SCN_MEM_EXECUTE | IMAGE_SCN_MEM_READ)",
+              "DATA segment": ".data (IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_READ | IMAGE_SCN_MEM_WRITE)",
+              "BSS segment": ".bss (IMAGE_SCN_CNT_UNINITIALIZED_DATA | IMAGE_SCN_MEM_READ | IMAGE_SCN_MEM_WRITE)"
+            }
+          },
+          "entry_point_conversion": {
+            "source": "CS:IP relatif au segment de chargement S0",
+            "target": "AddressOfEntryPoint (RVA)",
+            "formula": "EntryPoint_RVA = (S0 + CS) * 16 + IP - ImageBase"
+          }
+        }
+      }
+    ]
+  },
+
+  "domain_rules": {
+    "_priority": "HIGH",
+    "_description": "Règles specifiques au domaine SCADA/IoT",
+    "rules": [
+      {
+        "id": "domain_scada_iot",
+        "name": "Patterns SCADA et IoT",
+        "condition": {
+          "domain": "SCADA",
+          "sub_domain": "IoT_MAINTENANCE"
+        },
+        "transformations": {
+          "serial_communication": {
+            "legacy_ports": {
+              "3F8h (COM1)": "CreateFileA(\\\\.\\COM1, ...)",
+              "2F8h (COM2)": "CreateFileA(\\\\.\\COM2, ...)",
+              "3E8h (COM3)": "CreateFileA(\\\\.\\COM3, ...)",
+              "2E8h (COM4)": "CreateFileA(\\\\.\\COM4, ...)"
+            },
+            "api_mapping": {
+              "IN port": "ReadFile sur handle COM",
+              "OUT port": "WriteFile sur handle COM",
+              "check_status": "GetCommModemStatus",
+              "set_params": "SetCommState (DCB)"
+            }
+          },
+          "parallel_ports": {
+            "legacy_ports": {
+              "378h (LPT1)": "InpOut32.dll ou CreateFileA(\\\\.\\LPT1)",
+              "278h (LPT2)": "InpOut32.dll ou CreateFileA(\\\\.\\LPT2)"
+            }
+          },
+          "timing_and_polling": {
+            "dos_timer": "INT 08h a 18.2Hz",
+            "win32_replacement": "timeSetEvent ou CreateTimerQueueTimer",
+            "polling_loops": {
+              "detection": "Boucles avec IN/TEST/JNZ",
+              "replacement": "Event-driven avec WaitForSingleObject ou overlapped I/O"
+            }
+          }
+        }
+      }
+    ]
+  },
+
+  "pattern_rules": {
+    "_priority": "HIGH",
+    "_description": "Règles de detection et transformation de patterns complexes",
+    "rules": [
+      {
+        "id": "pattern_far_calls",
+        "name": "Resolution des far calls (CALLF/RETF)",
+        "condition": {
+          "instruction": "CALLF|JMPF|RETF",
+          "has_segment_change": true
+        },
+        "transformations": {
+          "resolution_strategy": {
+            "same_segment_group": "Convertir en CALL NEAR + sauvegarde/restauration de contexte",
+            "different_segment": "Creer une table de dispatch avec pointeurs de fonctions"
+          }
+        }
+      },
+      {
+        "id": "pattern_bcd_arithmetic",
+        "name": "Emulation des instructions BCD",
+        "condition": {
+          "instructions": ["AAA", "AAS", "AAM", "AAD", "DAA", "DAS"]
+        },
+        "transformations": {
+          "general_strategy": "Remplacer par des routines C inline ou des macros MASM complexes"
+        }
+      },
+      {
+        "id": "pattern_interrupt_hooks",
+        "name": "Hooks d'interruption (INT 21h AH=25h/35h)",
+        "condition": {
+          "function": "SET_INTERRUPT_VECTOR|GET_INTERRUPT_VECTOR",
+          "ah_value": "25h|35h"
+        },
+        "transformations": {
+          "set_vector_25h": {
+            "win32_equivalent": "Vectored Exception Handling (VEH) ou SEH",
+            "code": [
+              "push OFFSET my_handler",
+              "push 1",
+              "call AddVectoredExceptionHandler"
+            ]
+          }
+        }
+      }
+    ]
+  },
+
+  "instruction_rules": {
+    "_priority": "MEDIUM",
+    "_description": "Règles de conversion instruction par instruction",
+    "rules": [
+      {
+        "id": "inst_string_ops",
+        "name": "Operations sur chaines (MOVS, STOS, LODS, SCAS, CMPS)",
+        "condition": {
+          "prefix": "F2|F3",
+          "opcode": "A4|A5|A6|A7|AA|AB|AC|AD|AE|AF"
+        },
+        "transformations": {
+          "size_prefixes": {
+            "16_bit_prefix": "66h (OPERAND_SIZE_PREFIX)",
+            "usage": "REP MOVSW -> REP MOVSW (66h prefixe automatique si operand-size=16)"
+          }
+        }
+      }
+    ]
+  },
+
+  "interrupt_rules": {
+    "_priority": "MEDIUM",
+    "_description": "Règles de conversion des interruptions DOS/BIOS",
+    "rules": [
+      {
+        "id": "int_21h_file_ops",
+        "name": "INT 21h - Operations fichiers",
+        "condition": {
+          "interrupt": "21h",
+          "ah_range": "3Ch-46h"
+        },
+        "transformations": {
+          "create_file_3Ch": {
+            "win32": "CreateFileA(filename, GENERIC_READ|GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)"
+          },
+          "open_file_3Dh": {
+            "win32": "CreateFileA(filename, access, share, NULL, OPEN_EXISTING, attrs, NULL)"
+          },
+          "read_file_3Fh": {
+            "win32": "ReadFile(handle, buffer, count, &bytesRead, NULL)"
+          },
+          "write_file_40h": {
+            "win32": "WriteFile(handle, buffer, count, &bytesWritten, NULL)"
+          },
+          "close_file_3Eh": {
+            "win32": "CloseHandle(handle)"
+          }
+        }
+      },
+      {
+        "id": "int_10h_video",
+        "name": "INT 10h - Services video BIOS",
+        "condition": {
+          "interrupt": "10h"
+        },
+        "transformations": {
+          "write_char_0Eh": {
+            "win32": "WriteConsoleA(hConsole, &char, 1, &written, NULL)"
+          },
+          "set_cursor_02h": {
+            "win32": "SetConsoleCursorPosition(hConsole, coord)"
+          }
+        }
+      }
+    ]
+  },
+
+  "register_rules": {
+    "_priority": "MEDIUM",
+    "_description": "Règles de conversion des registres",
+    "rules": [
+      {
+        "id": "reg_16_to_32",
+        "name": "Expansion des registres generaux",
+        "condition": {
+          "register_size": 16,
+          "target_size": 32
+        },
+        "transformations": {
+          "direct_mapping": {
+            "AX": "EAX", "BX": "EBX", "CX": "ECX", "DX": "EDX",
+            "SI": "ESI", "DI": "EDI", "BP": "EBP", "SP": "ESP"
+          },
+          "segment_registers": {
+            "CS/DS/ES/SS": "Non utilisables en mode FLAT",
+            "strategy": "Remplacer par des registres generaux ou des variables memoire"
+          }
+        }
+      }
+    ]
+  },
+
+  "segment_rules": {
+    "_priority": "MEDIUM",
+    "_description": "Règles de conversion des segments et modeles memoire",
+    "rules": [
+      {
+        "id": "seg_model_conversion",
+        "name": "Conversion des modeles memoire",
+        "condition": {
+          "has_model_directive": true
+        },
+        "transformations": {
+          "small_model": {
+            "description": "Code et donnees dans un seul segment",
+            "target": ".MODEL FLAT, STDCALL"
+          },
+          "large_model": {
+            "description": "Multiple code et data segments",
+            "target": ".MODEL FLAT, STDCALL",
+            "strategy": "Creer des modules separes (fichiers .asm) avec PUBLIC/EXTERN"
+          }
+        }
+      }
+    ]
+  },
+
+  "directive_rules": {
+    "_priority": "LOW",
+    "_description": "Règles de conversion des directives assembleur",
+    "rules": [
+      {
+        "id": "dir_cpu_upgrade",
+        "name": "Mise a niveau des directives CPU",
+        "condition": {
+          "directive": ".8086|.186|.286|.286P"
+        },
+        "transformations": {
+          ".8086": ".386",
+          ".186": ".386",
+          ".286": ".386",
+          ".286P": ".386P"
+        }
+      }
+    ]
+  },
+
+  "macro_rules": {
+    "_priority": "LOW",
+    "_description": "Règles de conversion des macros et templates",
+    "rules": [
+      {
+        "id": "macro_win32_stubs",
+        "name": "Macros de stub Win32",
+        "condition": {
+          "target_platform": "Win32"
+        },
+        "templates": {
+          "program_skeleton": {
+            "code": [
+              ".386",
+              ".MODEL FLAT, STDCALL",
+              "OPTION CASEMAP:NONE",
+              "",
+              "ExitProcess PROTO :DWORD",
+              "GetStdHandle PROTO :DWORD",
+              "WriteConsoleA PROTO :DWORD, :DWORD, :DWORD, :DWORD, :DWORD",
+              "",
+              "STD_OUTPUT_HANDLE EQU -11",
+              "",
+              ".data",
+              "",
+              ".code",
+              "main PROC",
+              "    invoke ExitProcess, 0",
+              "main ENDP",
+              "END main"
+            ]
+          }
+        }
+      }
+    ]
+  },
+
+  "fallback_rules": {
+    "_priority": "INFO",
+    "_description": "Règles de secours et marquage pour intervention manuelle",
+    "rules": [
+      {
+        "id": "fallback_unsupported",
+        "name": "Instructions non supportees",
+        "condition": {
+          "match": "no_rule_applied"
+        },
+        "action": {
+          "type": "MARK_MANUAL",
+          "marker": "MANUAL_REVIEW_REQUIRED",
+          "output": "; [SCADASSEMBLER] Instruction non convertie automatiquement"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "serial_ports": {
+    "COM1": {
+      "dos_port": "3F8h",
+      "win32_device": "\\\\.\\COM1",
+      "api": {
+        "open": "CreateFileA(device, GENERIC_READ|GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)",
+        "read": "ReadFile(handle, buffer, count, &bytesRead, NULL)",
+        "write": "WriteFile(handle, buffer, count, &bytesWritten, NULL)",
+        "close": "CloseHandle(handle)",
+        "config": "SetCommState(handle, &dcb)",
+        "timeouts": "SetCommTimeouts(handle, &timeouts)"
+      },
+      "dcb_settings": {
+        "baud_rate": "CBR_9600",
+        "byte_size": 8,
+        "parity": "NOPARITY",
+        "stop_bits": "ONESTOPBIT"
+      }
+    },
+    "COM2": {
+      "dos_port": "2F8h",
+      "win32_device": "\\\\.\\COM2"
+    },
+    "COM3": {
+      "dos_port": "3E8h",
+      "win32_device": "\\\\.\\COM3"
+    },
+    "COM4": {
+      "dos_port": "2E8h",
+      "win32_device": "\\\\.\\COM4"
+    }
+  },
+  "parallel_ports": {
+    "LPT1": {
+      "dos_port": "378h",
+      "strategies": [
+        "InpOut32.dll (acces direct x86)",
+        "CreateFileA(\\\\.\\LPT1, ...)"
+      ]
+    },
+    "LPT2": {
+      "dos_port": "278h"
+    }
+  },
+  "timing": {
+    "dos_timer_18_2hz": {
+      "description": "Timer DOS 18.2Hz (INT 08h)",
+      "win32_replacement": "timeSetEvent(55, 0, TimerProc, 0, TIME_PERIODIC)",
+      "alternative": "CreateTimerQueueTimer"
+    },
+    "high_precision": {
+      "description": "Timing haute precision",
+      "api": "QueryPerformanceCounter + QueryPerformanceFrequency"
+    }
+  },
+  "protocols": {
+    "modbus_rtu": {
+      "description": "Modbus RTU sur RS-485",
+      "library": "libmodbus",
+      "win32_port": "libmodbus.dll"
+    },
+    "proprietary_serial": {
+      "description": "Protocole maison sur serie",
+      "strategy": "Documenter et wrapper dans une DLL dediee"
+    }
+  }
+}

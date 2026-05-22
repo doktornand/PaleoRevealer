@@ -1,0 +1,35 @@
+{
+  "name": "scadassembler-v2",
+  "version": "2.0.0",
+  "description": "Convertisseur ASM16/DOS vers ASM32/Win32 avec support MZ/PE et regles hierarchiques",
+  "main": "src/core/converter.js",
+  "bin": {
+    "scadassembler": "./cli.js"
+  },
+  "scripts": {
+    "start": "node cli.js",
+    "test": "node tests/run_tests.js",
+    "test:mz": "node tests/test_mz_parser.js",
+    "test:rules": "node tests/test_rule_engine.js",
+    "build": "echo 'Build complete'",
+    "lint": "eslint src/"
+  },
+  "keywords": [
+    "assembler",
+    "dos",
+    "win32",
+    "migration",
+    "scada",
+    "iot",
+    "pe",
+    "mz",
+    "conversion"
+  ],
+  "author": "doktornand (extended)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

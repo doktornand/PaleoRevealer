@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scadassembler v2.0 - Convertisseur ASM16/DOS vers ASM32/Win32</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Scadassembler v2.0</h1>
+            <p>Convertisseur ASM16/DOS vers ASM32/Win32</p>
+            <div class="badge">SCADA/IoT Ready</div>
+        </header>
+
+        <main>
+            <div class="panel input-panel">
+                <h2>Source (ASM16/DOS)</h2>
+                <div class="toolbar">
+                    <button id="btn-load-example">Charger exemple</button>
+                    <button id="btn-clear">Effacer</button>
+                    <select id="example-select">
+                        <option value="">-- Exemples --</option>
+                        <option value="hello_dos">Hello World DOS</option>
+                        <option value="serial_poll">Polling Serie</option>
+                        <option value="file_io">Entrees/Sorties Fichier</option>
+                        <option value="timer_int">Timer + Interruption</option>
+                    </select>
+                </div>
+                <textarea id="source-code" placeholder="; Entrez votre code ASM 16-bit ici..."></textarea>
+                <div class="file-drop" id="file-drop">
+                    <p>Glissez-deposez un fichier .ASM, .COM ou .EXE ici</p>
+                    <input type="file" id="file-input" accept=".asm,.com,.exe" hidden>
+                </div>
+            </div>
+
+            <div class="panel options-panel">
+                <h2>Options</h2>
+                <div class="option-group">
+                    <label>Format cible:</label>
+                    <select id="target-format">
+                        <option value="MASM">MASM32 (.asm)</option>
+                        <option value="NASM">NASM (.asm)</option>
+                        <option value="PE">PE Executable (.exe)</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label>Sous-systeme:</label>
+                    <select id="subsystem">
+                        <option value="CONSOLE">Console</option>
+                        <option value="WINDOWS">Windows (GUI)</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label>
+                        <input type="checkbox" id="scada-mode" checked>
+                        Mode SCADA/IoT
+                    </label>
+                </div>
+                <div class="option-group">
+                    <label>
+                        <input type="checkbox" id="keep-comments" checked>
+                        Conserver commentaires
+                    </label>
+                </div>
+                <div class="option-group">
+                    <label>
+                        <input type="checkbox" id="generate-report">
+                        Generer rapport
+                    </label>
+                </div>
+                <button id="btn-convert" class="btn-primary">Convertir (Ctrl+Enter)</button>
+            </div>
+
+            <div class="panel output-panel">
+                <h2>Resultat (ASM32/Win32)</h2>
+                <div class="toolbar">
+                    <button id="btn-copy">Copier</button>
+                    <button id="btn-download">Telecharger</button>
+                </div>
+                <textarea id="output-code" readonly placeholder="; Le code converti apparaitra ici..."></textarea>
+                <div id="report-panel" class="report-panel hidden">
+                    <h3>Rapport de conversion</h3>
+                    <div id="report-content"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Scadassembler v2.0 - Pipeline 5 phases | Parser MZ | Regles hierarchiques</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

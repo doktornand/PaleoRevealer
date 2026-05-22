@@ -1,0 +1,76 @@
+{
+  "supported_input": [
+    ".com",
+    ".exe",
+    ".asm"
+  ],
+  "supported_output": [
+    ".asm",
+    ".obj",
+    ".exe"
+  ],
+  "format_detection": {
+    "by_extension": {
+      ".com": "COM",
+      ".exe": "MZ_OR_PE",
+      ".asm": "SOURCE_ASM"
+    },
+    "by_magic": {
+      "MZ": "MZ",
+      "ZM": "MZ",
+      "PE": "PE",
+      "NE": "NE",
+      "LE": "LE",
+      "LX": "LX"
+    }
+  },
+  "conversion_paths": {
+    "COM_TO_MASM": {
+      "description": "Fichier .COM vers source MASM32",
+      "steps": [
+        "parse_com",
+        "analyze_zones",
+        "apply_rules",
+        "emit_masm"
+      ]
+    },
+    "COM_TO_PE": {
+      "description": "Fichier .COM vers executable PE",
+      "steps": [
+        "parse_com",
+        "analyze_zones",
+        "apply_rules",
+        "emit_pe"
+      ]
+    },
+    "MZ_TO_MASM": {
+      "description": "Fichier .EXE (MZ) vers source MASM32",
+      "steps": [
+        "parse_mz",
+        "analyze_segments",
+        "convert_relocations",
+        "apply_rules",
+        "emit_masm"
+      ]
+    },
+    "MZ_TO_PE": {
+      "description": "Fichier .EXE (MZ) vers executable PE",
+      "steps": [
+        "parse_mz",
+        "analyze_segments",
+        "convert_relocations",
+        "apply_rules",
+        "emit_pe"
+      ]
+    },
+    "ASM_TO_MASM": {
+      "description": "Source ASM DOS vers source MASM32",
+      "steps": [
+        "parse_source",
+        "tokenize",
+        "apply_rules",
+        "emit_masm"
+      ]
+    }
+  }
+}

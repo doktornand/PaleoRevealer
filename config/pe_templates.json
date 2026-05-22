@@ -1,0 +1,43 @@
+{
+  "console_32bit": {
+    "description": "Template PE Console 32-bit standard",
+    "subsystem": 1,
+    "major_subsystem_version": 6,
+    "minor_subsystem_version": 0,
+    "image_base": 4194304,
+    "section_alignment": 4096,
+    "file_alignment": 512,
+    "stack_reserve": 1048576,
+    "stack_commit": 65536,
+    "heap_reserve": 1048576,
+    "heap_commit": 4096,
+    "imports": [
+      "kernel32.dll"
+    ]
+  },
+  "windows_32bit": {
+    "description": "Template PE Windows 32-bit (GUI)",
+    "subsystem": 2,
+    "major_subsystem_version": 6,
+    "minor_subsystem_version": 0,
+    "imports": [
+      "kernel32.dll",
+      "user32.dll",
+      "gdi32.dll"
+    ]
+  },
+  "scada_console": {
+    "description": "Template PE optimise pour SCADA/IoT",
+    "subsystem": 1,
+    "imports": [
+      "kernel32.dll",
+      "user32.dll",
+      "winmm.dll"
+    ],
+    "additional_features": [
+      "high_resolution_timer",
+      "serial_communication",
+      "console_io"
+    ]
+  }
+}
