@@ -344,9 +344,9 @@ class HierarchicalRuleEngine {
 
     _getManualReviewReason(rule) {
         const reasons = {
-            'pattern_far_calls': 'Graphe d'appel complexe - nécessite analyse manuelle',
+            'pattern_far_calls': 'Graphe appel complexe - nécessite analyse manuelle',
             'pattern_self_modifying': 'Code auto-modifiant - risque de sécurité',
-            'pattern_interrupt_hooks': 'Hooks d'interruption - comportement critique',
+            'pattern_interrupt_hooks': 'Hooks interruption - comportement critique',
             'pattern_dollar_strings': 'Chaînes DOS $ - vérifier la longueur calculée'
         };
         return reasons[rule.id] || 'Pattern complexe détecté';
