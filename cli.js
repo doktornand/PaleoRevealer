@@ -121,7 +121,7 @@ async function main() {
     const options = parseArgs(args);
 
     if (!options.input) {
-        console.error('Erreur: Aucun fichier d'entree specifie');
+        console.error('Erreur: Aucun fichier original specifie');
         process.exit(1);
     }
 
@@ -157,22 +157,19 @@ Code genere: ${emit.metadata.lines || '?'} lignes`);
         }
 
         if (results.warnings.length > 0) {
-            console.log('
-=== Avertissements ===');
+            console.log('=== Avertissements ===');
             results.warnings.forEach(w => console.log(`[${w.phase}] ${w.message}`));
         }
 
         if (results.errors.length > 0) {
-            console.log('
-=== Erreurs ===');
+            console.log('=== Erreurs ===');
             results.errors.forEach(e => console.log(`[${e.phase}] ${e.message}`));
         }
 
         // Validation
         if (results.phases.validation) {
             const val = results.phases.validation;
-            console.log('
-=== Validation ===');
+            console.log('=== Validation ===');
             val.checks.forEach(c => {
                 const status = c.passed ? '✓' : '✗';
                 console.log(`${status} ${c.name}: ${c.message}`);
@@ -192,9 +189,7 @@ Rapport genere: ${reportPath}`);
 
         // Sortie stdout si pas de fichier de sortie
         if (!options.output && results.phases.emission) {
-            console.log('
-=== Code genere ===
-');
+            console.log('=== Code genere ===');
             console.log(results.phases.emission.code);
         }
 
