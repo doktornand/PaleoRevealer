@@ -268,7 +268,7 @@ class ScadassemblerConverter {
         validation.checks.push({
             name: 'entry_point_present',
             passed: hasEntryPoint,
-            message: hasEntryPoint ? 'Point d'entrée trouvé' : 'Point d'entrée manquant'
+            message: hasEntryPoint ? 'Point entrée trouvé' : 'Point entrée manquant'
         });
 
         // Vérification 2: Modèle FLAT
@@ -418,7 +418,7 @@ class ScadassemblerConverter {
         lines.push('');
         lines.push('global _start');
         lines.push('_start:');
-        lines.push('    ; Point d'entrée');
+        lines.push('    ; Point entrée');
         lines.push('    push 0');
         lines.push('    call [ExitProcess]');
 
