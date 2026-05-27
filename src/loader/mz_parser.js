@@ -259,7 +259,7 @@ class MZParser {
                 type: 'code',
                 relativeBase: this.header.initialCS,
                 entryPoint: this.header.initialIP,
-                purpose: 'Segment de code (point d'entrée)'
+                purpose: 'Segment de code (point entrée)'
             });
         }
 
@@ -494,7 +494,7 @@ class MZParser {
                 priority: 'MEDIUM',
                 category: 'STRUCTURE',
                 message: 'Structure segmentée complexe détectée',
-                action: 'Utiliser l'analyse CFG pour reconstruction du flux de contrôle'
+                action: 'Utiliser analyse CFG pour reconstruction du flux de contrôle'
             });
         }
 
