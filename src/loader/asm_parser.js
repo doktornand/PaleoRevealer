@@ -1,12 +1,37 @@
 /**
  * ASM Parser - Analyseur syntaxique 16-bit → AST structuré
+ * CORRECTION: Détection robuste chemin de fichier vs contenu source
  */
 const { ASMTokenizer } = require('../core/asm_tokenizer');
+const fs = require('path');
 const fs = require('fs');
 
 class ASMParser {
+  /**
+   * Parse un fichier .ASM ou un buffer/string contenant le code source
+   * @param {string|Buffer} input - Chemin du fichier OU contenu source
+   * @returns {Object} Structure AST enrichie
+   */
   parse(input) {
-    const source = Buffer.isBuffer(input) ? input.toString('utf8') : fs.readFileSync(input, 'utf8');
+    let source;
+
+    if (Buffer.isBuffer(input)) {
+      source = input.toString('utf8');
+    } else if (typeof input === 'string') {
+      // Heuristique de détection:
+      // Si le string contient des sauts de ligne ou dépasse 200 caractères → c'est le contenu source
+      // Sinon → on vérifie si c'est un chemin de fichier valide
+      if (input.includes('\n') || input.length > 200) {
+        source = input;
+      } else if (fs.existsSync(input)) {
+        source = fs.readFileSync(input, 'utf8');
+      } else {
+        throw new Error(`Entrée invalide: ni contenu source, ni chemin de fichier valide ("${input.substring(0, 50)}...")`);
+      }
+    } else {
+      throw new Error('Type d\'entrée non supporté par ASMParser (attendu: Buffer ou string)');
+    }
+
     const tokenizer = new ASMTokenizer();
     const tokens = tokenizer.tokenize(source);
     const lines = tokenizer.groupByLine(tokens);
@@ -109,11 +134,11 @@ class ASMParser {
   }
 
   _findAhContext(toks, line, lines) {
-    // Scan simple des lignes précédentes pour AH=xx
     for (let i = Math.max(1, line - 3); i < line; i++) {
       const l = lines[i];
       if (l && l.some(t => t.value.toUpperCase() === 'AH')) {
-        const nextTok = l[l.indexOf(l.find(t => t.value.toUpperCase() === 'AH')) + 2];
+        const idx = l.findIndex(t => t.value.toUpperCase() === 'AH');
+        const nextTok = l[idx + 2]; // Skip operand comma if present
         if (nextTok && nextTok.type === 'NUMBER') return nextTok.value.replace(/[^0-9a-fA-F]/g, '') + 'h';
       }
     }
