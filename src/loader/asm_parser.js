@@ -1,9 +1,9 @@
 /**
  * ASM Parser - Analyseur syntaxique 16-bit → AST structuré
  * CORRECTION: Détection robuste chemin de fichier vs contenu source
+ * + Importations nettoyées
  */
 const { ASMTokenizer } = require('../core/asm_tokenizer');
-const fs = require('path');
 const fs = require('fs');
 
 class ASMParser {
@@ -19,8 +19,6 @@ class ASMParser {
       source = input.toString('utf8');
     } else if (typeof input === 'string') {
       // Heuristique de détection:
-      // Si le string contient des sauts de ligne ou dépasse 200 caractères → c'est le contenu source
-      // Sinon → on vérifie si c'est un chemin de fichier valide
       if (input.includes('\n') || input.length > 200) {
         source = input;
       } else if (fs.existsSync(input)) {
@@ -138,7 +136,7 @@ class ASMParser {
       const l = lines[i];
       if (l && l.some(t => t.value.toUpperCase() === 'AH')) {
         const idx = l.findIndex(t => t.value.toUpperCase() === 'AH');
-        const nextTok = l[idx + 2]; // Skip operand comma if present
+        const nextTok = l[idx + 2];
         if (nextTok && nextTok.type === 'NUMBER') return nextTok.value.replace(/[^0-9a-fA-F]/g, '') + 'h';
       }
     }
