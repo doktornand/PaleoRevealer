@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaleoRevealer · InGen Dead Code Resurrection Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #1a3f1a, #0a1f0a);
+            font-family: 'Courier New', 'Fira Code', 'Segoe UI', monospace;
+            color: #e6e2c3;
+            line-height: 1.5;
+            padding: 2rem;
+        }
+
+        /* Jurassic amber container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(20, 20, 12, 0.75);
+            backdrop-filter: blur(3px);
+            border: 2px solid #b97f2e;
+            border-radius: 32px;
+            box-shadow: 0 0 40px rgba(218, 165, 32, 0.3), inset 0 0 20px rgba(0,0,0,0.5);
+            padding: 2rem;
+            transition: all 0.2s;
+        }
+
+        /* header style — InGen + Jurassic vibe */
+        .header {
+            text-align: center;
+            border-bottom: 3px dashed #d4af37;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+        }
+
+        .ingen-logo {
+            font-size: 2.2rem;
+            letter-spacing: 6px;
+            font-weight: bold;
+            text-shadow: 0 0 6px #6a8e1f;
+            background: linear-gradient(135deg, #f5e67b, #bb8f39);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .project-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0.5rem 0;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffcd7e, #b45f1b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            word-break: keep-all;
+        }
+
+        .jurassic-badge {
+            background: #2c2b1f;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            border-left: 4px solid #e6ac44;
+            font-family: monospace;
+        }
+
+        /* nav / toc */
+        .toc {
+            background: #121c0ecc;
+            border-radius: 28px;
+            padding: 1.2rem;
+            margin: 2rem 0;
+            border: 1px solid #7c632e;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        .toc a {
+            color: #fad97c;
+            text-decoration: none;
+            background: #1f2a12;
+            padding: 0.4rem 1rem;
+            border-radius: 24px;
+            font-weight: bold;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .toc a:hover {
+            background: #4f3f1a;
+            color: #ffeaac;
+            border-bottom: 2px solid #ecb21e;
+            transform: scale(1.02);
+        }
+
+        /* typo & cards */
+        h1, h2, h3 {
+            font-weight: 600;
+            margin-top: 1.6em;
+            margin-bottom: 0.6em;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-left: 8px solid #e09d32;
+            padding-left: 1rem;
+            text-shadow: 2px 2px 0 #1f2b0e;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #f3cd81;
+            margin-top: 1.4rem;
+        }
+
+        .card {
+            background: #1e2617aa;
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 1.4rem;
+            margin: 1.4rem 0;
+            border: 1px solid #ac8e48;
+            transition: 0.1s linear;
+        }
+
+        code, pre {
+            background: #0c1309;
+            color: #f7e5b1;
+            border-radius: 16px;
+            padding: 0.2rem 0.4rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            border-left: 4px solid #e5a03c;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .rule-grid, .arch-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+
+        .badge-cap {
+            background: #2a421b;
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            font-weight: bold;
+            border: 1px solid #b8860b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: #111a0ecc;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #6a4e20;
+            padding: 0.6rem;
+            text-align: left;
+        }
+        th {
+            background: #2f2a18;
+            color: #ffdd99;
+        }
+
+        .warning {
+            border-left: 5px solid #ff9800;
+            background: #2c2416;
+            padding: 0.8rem;
+            border-radius: 20px;
+            margin: 1rem 0;
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            border-top: 1px solid #6a5a2e;
+            padding-top: 1.5rem;
+        }
+
+        button, .dino-badge {
+            background: #402e15;
+            border: none;
+            font-family: monospace;
+            color: #ffde9c;
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 0.8rem; }
+            .project-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="ingen-logo">🏝️ INGEN · ADVANCED DEADCODE RESURRECTION DIVISION 🦖</div>
+        <div class="project-title">⚡ PaleoRevealer ⚡</div>
+        <div class="jurassic-badge">"Jurassic Mode™ — because dead code doesn't have to stay extinct"</div>
+        <p style="margin-top: 10px;">Evolution de Scassembler v2.0 · ASM16/DOS → ASM32/Win32 · Resurrection de fragments fossiles</p>
+    </div>
+
+    <div class="toc">
+        <a href="#archi">🏛️ ARCHITECTURE</a>
+        <a href="#capacites">🦕 CAPACITÉS</a>
+        <a href="#limites">⚠️ LIMITES</a>
+        <a href="#custom">🧬 CUSTOMISATION</a>
+        <a href="#tuto">🛠️ TUTORIEL</a>
+        <a href="#workflow">🗺️ WORKFLOW</a>
+    </div>
+
+    <!-- SECTION ARCHITECTURE -->
+    <h2 id="archi">🏛️ 1. Architecture Framework · Niveau ADN fossile</h2>
+    <div class="card">
+        <p><strong>Pipeline en 5 phases</strong> — Comme extraire l’ADN d’un moustique dans de l’ambre :</p>
+        <pre>
+[1] CHARGEMENT   → Parser MZ / COM / ASM brut
+[2] ANALYSE      → CFG, Dataflow, patterns SCADA/IoT
+[3] TRANSFORMATION → Moteur de règles hiérarchiques (11 catégories)
+[4] EMISSION     → Backends MASM, NASM, PE (Win32)
+[5] VALIDATION   → Revues manuelles, rapports JSON
+        </pre>
+        <div class="arch-flex">
+            <div><span class="badge-cap">📦 loader/</span> MZ, COM, PE generator</div>
+            <div><span class="badge-cap">⚙️ core/</span> Pipeline, rule engine, analyse</div>
+            <div><span class="badge-cap">🔌 plugins/</span> BCD, far calls, Bridge IoT, DOS/BIOS dispatch</div>
+            <div><span class="badge-cap">🎛️ backends/</span> MASM, NASM, PE emission</div>
+        </div>
+        <p><em>🗃️ Configs dynamiques :</em> hierarchical_rules.json · iot_mappings.json · pe_templates.json</p>
+    </div>
+
+    <!-- CAPACITES -->
+    <h2 id="capacites">🦖 2. Capacités de résurrection (Jurassic Mode)</h2>
+    <div class="card">
+        <table>
+            <tr><th>Domaine</th><th>Capacité</th></tr>
+            <tr><td>Formats entrée</td><td>.EXE (MZ), .COM (64K plat), code source .ASM</td></tr>
+            <tr><td>Formats sortie</td><td>PE32 Win32, MASM/NASM source</td></tr>
+            <tr><td>DeadCode resurrection</td><td>Transformation automatique de routines mortes (far calls, INT, BCD)</td></tr>
+            <tr><td>Mode SCADA / IoT</td><td>Mapping ports série/parallèle, timers → bridge Windows API</td></tr>
+            <tr><td>Plugins spécialisés</td><td>Emulation BCD (AAA, DAA), CALLF/JMPF/RETF, interruptions DOS/BIOS</td></tr>
+            <tr><td>UI Web</td><td>Éditeur temps réel, coloration, drag & drop</td></tr>
+            <tr><td>Reporting</td><td>JSON avec zones de revue manuelle, patterns SCADA détectés</td></tr>
+        </table>
+        <div class="warning">
+            💡 <strong>Mode Jurassic</strong> : résurrection de "fossiles logiciels" – anciens drivers, outils industriels, TSRs. Le framework analyse et réécrit le code 16-bit en 32-bit tout en préservant la logique métier.
+        </div>
+    </div>
+
+    <!-- LIMITES -->
+    <h2 id="limites">⚠️ 3. Limites (fossiles fragiles)</h2>
+    <div class="card">
+        <ul style="margin-left: 1.5rem;">
+            <li>❌ Pas de support pour les DOS extenders (DPMI, DOS4GW, mode protégé 16/32)</li>
+            <li>❌ .COM > 64KB non supporté (limite structurelle)</li>
+            <li>❌ Pas de rétro-conversion Win32 → DOS</li>
+            <li>❌ Pas de GUI pour configurer les règles JSON (éditeur manuel requis)</li>
+            <li>❌ La génération PE peut nécessiter revues manuelles (zones marquées dans rapport)</li>
+            <li>❌ Mapping IoT limité aux périphériques définis dans <code>iot_mappings.json</code></li>
+            <li>⚠️ Les TSR DOS ne se comportent pas comme des processus Win32 classiques (nécessite adaptation)</li>
+            <li>🦕 Code fortement obfusqué ou auto-modifiable → résurrection difficile</li>
+        </ul>
+        <p><strong>Recommandation InGen</strong> : commencez toujours par <code>--report</code> pour évaluer le taux de complétude avant conversion massive.</p>
+    </div>
+
+    <!-- CUSTOMISATION & EXTENSION -->
+    <h2 id="custom">🧬 4. Customisation & Extension – Édition du génome</h2>
+    <div class="card">
+        <h3>📝 Niveau 1 · Configuration JSON (ADN de base)</h3>
+        <pre>
+config/
+├── hierarchical_rules.json   # priorité des 11 catégories
+├── iot_mappings.json         # ex: port 0x378 → CreateFile("LPT1")
+├── pe_templates.json         # sections .text/.data personnalisables
+        </pre>
+        <h3>🎨 Niveau 2 · Backends & wrappers</h3>
+        <pre>templates/win32_main_wrapper.asm  # modifier prologue/épilogue</pre>
+        <h3>🧩 Niveau 3 · Plugins nouveaux dinosaures</h3>
+        <pre>
+// src/plugins/my_fpu_plugin.js
+class FPUResurrector {
+  constructor() { this.name = "FPU_Extinct_Reviver"; }
+  process(instruction, ctx) {
+    if(instruction.mnemonic === 'FADD') { /* transformation */ }
+    return instruction;
+  }
+}
+module.exports = FPUResurrector;
+        </pre>
+        <p>Ajoutez ensuite votre plugin dans le pipeline (fichier <code>src/core/pipeline.js</code>).</p>
+        <h3>🌐 Niveau 4 · Interface Web (amber interface)</h3>
+        <p>Personnalisez <code>ui/</code> : thème sombre Jurassic, export PDF du rapport, bouton "Raptor mode" (accélération).</p>
+        <div class="warning">
+            🧬 <strong>Conseil d'extension</strong> : si vous devez supporter du matériel legacy (carte ISA, bus VME), clonez le plugin IoT bridge et étendez les mappings.
+        </div>
+    </div>
+
+    <!-- TUTORIEL ULTRA DETAILLE -->
+    <h2 id="tuto">🛠️ 5. Tutoriel sur le terrain – Opération "Cloner le T-Rex"</h2>
+    <div class="card">
+        <h3>🔧 Prérequis</h3>
+        <pre>Node.js ≥14 · npm · un peu d'assembleur x86 DOS/Win32</pre>
+        <h3>🧪 Installation & extraction fossile</h3>
+        <pre>
+git clone https://github.com/doktornand/PaleoRevealer.git
+cd PaleoRevealer
+npm install
+npm test               # Vérifier que tout fonctionne
+npm run test:mz
+npm run test:rules
+        </pre>
+
+        <h3>🦕 Cas 1 · Conversion d'un fichier .ASM vers PE</h3>
+        <pre>
+node cli.js ancien.asm -o raptor.exe -f pe --subsystem CONSOLE --debug --report
+        </pre>
+
+        <h3>📀 Cas 2 · MZ ➜ PE (EXE DOS legacy)</h3>
+        <pre>
+node cli.js --mz-to-pe -o jeu_win32.exe vieux_jeu.exe
+node cli.js --mz-to-pe --report --debug dos_app.exe -o modern_app.exe
+        </pre>
+
+        <h3>🧪 Cas 3 · TSR .COM → driver Win32</h3>
+        <pre>
+node cli.js --com-to-pe -o tsr_win32.exe resident.com --subsystem WINDOWS
+        </pre>
+
+        <h3>🏭 Cas 4 · Mode SCADA/IoT (industrie Jurassic)</h3>
+        <pre>
+node cli.js --scada --report --format masm automate_driver.asm
+# iot_mappings.json sera utilisé pour rediriger IN/OUT
+        </pre>
+
+        <h3>🧬 Générer un rapport d'analyse de résurrection</h3>
+        <pre>
+node cli.js extinct_program.exe --report
+# génère extinct_program.report.json contenant:
+# - zones à revue manuelle (far calls non résolus, INT 0x21 non mappée...)
+# - patterns SCADA détectés, instructions BCD
+        </pre>
+        <div class="warning">
+            🔬 <strong>Bonnes pratiques InGen</strong> : utilisez d'abord <code>--debug</code> et <code>--report</code> sur un petit échantillon. Les conversions complexes nécessitent souvent de peaufiner <code>hierarchical_rules.json</code>.
+        </div>
+    </div>
+
+    <!-- WORKFLOW RECOMMANDE -->
+    <h2 id="workflow">🗺️ 6. Workflow recommandé – Plan d'extraction Hammond</h2>
+    <div class="card">
+        <pre>
+1. [ANALYSE INITIALE]
+   node cli.js --report legacy.exe
+   → Examiner le JSON, identifier les interruptions non gérées
+
+2. [CONFIGURATION SUR MESURE]
+   nano config/iot_mappings.json   # mapper vos adresses I/O spécifiques
+   nano config/hierarchical_rules.json   # augmenter priorité certaines règles
+
+3. [CONVERSION ITERATIVE]
+   node cli.js --mz-to-pe --debug legacy.exe -o test_cycle1.exe
+   → Tester, ajuster les templates PE
+
+4. [REVUE MANUELLE]
+   Ouvrir les zones marquées "manual_review_needed" dans le rapport
+
+5. [PRODUCTION FINALE]
+   node cli.js --no-comments --subsystem WINDOWS final_ingen.exe
+        </pre>
+        <p>🎯 <strong>Exemple réel</strong> : un système de contrôle de capteurs sur ancien PC industriel 286. Grâce au mode SCADA, PaleoRevealer convertit les accès au port parallèle (0x378) en appels Windows, ressuscitant le code mort.</p>
+    </div>
+
+    <!-- COMPARAISON ET TABLEAU -->
+    <h2>📊 Comparaison évolutive : Scassembler → PaleoRevealer</h2>
+    <div class="card">
+        <table>
+            <tr><th>Fonctionnalité</th><th>Scassembler v1</th><th>PaleoRevealer (Jurassic)</th></tr>
+            <tr><td>ASM → PE</td><td>✅</td><td>✅</td></tr>
+            <tr><td>MZ → PE</td><td>❌</td><td>✅ (relocation tables)</td></tr>
+            <tr><td>COM → PE</td><td>❌</td><td>✅ (TSR inclus)</td></tr>
+            <tr><td>Mode SCADA/IoT</td><td>❌</td><td>✅ pont hardware</td></tr>
+            <tr><td>DeadCode resurrection</td><td>❌</td><td>✅ "Jurassic Mode"</td></tr>
+            <tr><td>Plugins & règles hiérarchiques</td><td>❌</td><td>✅ 11 catégories + BCD emulator</td></tr>
+            <tr><td>UI Web drag & drop</td><td>❌</td><td>✅ coloration temps réel</td></tr>
+        </table>
+    </div>
+
+    <h2>🧪 Détails des plugins spécialisés (extinct instruction revival)</h2>
+    <div class="card">
+        <ul>
+            <li><strong>BCD Emulator</strong> : restaure AAA, DAA, AAS, DAS (instructions arithmétique décimal, souvent mortes)</li>
+            <li><strong>Far Call Resolver</strong> : transforme CALLF/JMPF 16:16 en callbacks Win32 ou thunks</li>
+            <li><strong>IoT Bridge</strong> : capture OUT/IN et redirige vers API Windows (ex: pour piloter des equipements legacy)</li>
+            <li><strong>DOS/BIOS Interrupt Dispatcher</strong> : convertit INT 21h, INT 10h, INT 13h en appels équivalents Win32</li>
+        </ul>
+        <p>Ces plugins sont activables automatiquement selon le contexte et les règles.</p>
+    </div>
+
+    <!-- LIMITES PRATIQUES ET RECO -->
+    <div class="warning">
+        🧬 <strong>Jurassic Park Avertissement</strong> : Bien que PaleoRevealer ramène à la vie des dinosaures binaires, certaines créatures restent instables. Testez toujours sur machine virtuelle avant déploiement en production. Les programmes qui manipulent directement l'IVT (Interrupt Vector Table) ou qui utilisodes appels INT 0x2F (multiplex) nécessitent des revues spécialisées.
+    </div>
+
+    <h2>⚙️ Options CLI avancées (paddock control)</h2>
+    <div class="card">
+        <pre>
+--scada               → Active les mappings IoT (ports série, parallèle, timers)
+--report              → Génère un fichier .report.json (analyse post-mortem)
+--no-comments         → Supprime les commentaires du code généré
+--debug               → Logs détaillés du pipeline
+--format masm|nasm|pe → Choix du backend
+--subsystem CONSOLE|WINDOWS
+--com-to-pe, --mz-to-pe  → Conversion directe d'exécutables
+        </pre>
+    </div>
+
+    <!-- TUTORIEL POUR CREER UN PLUGIN PERSONNALISÉ -->
+    <h2>🧩 Extension guide : création d'un plugin "Ankylosaurus Armor"</h2>
+    <div class="card">
+        <p>Pour ajouter votre propre module de transformation :</p>
+        <pre>
+// src/plugins/ankylosaurus_armor.js
+class AnkylosaurusPlugin {
+    constructor() { this.name = "AnkylosArmor"; }
+    process(instruction, context) {
+        if(instruction.mnemonic === "INT" && instruction.operands[0] === "0x13") {
+            // redirige INT 0x13 (disque) vers la logique moderne
+            return { ...instruction, comment: "; resurrected disk access" };
+        }
+        return instruction;
+    }
+}
+module.exports = AnkylosaurusPlugin;
+
+// Puis dans src/core/pipeline.js, importez et ajoutez à la chaîne.
+        </pre>
+    </div>
+
+    <h2>📁 Ressources disponibles dans le dépôt</h2>
+    <div class="card">
+        <pre>
+docs/Architecture.md        # détails pipeline
+docs/MZ_Format.md           # anatomie .EXE DOS
+docs/Rules_Schema.md        # syntaxe règles hiérarchiques
+config/iot_mappings.json    # extension pour périphériques industriels
+templates/win32_main_wrapper.asm
+        </pre>
+        <p>Accédez avec <code>cd docs && cat Architecture.md</code></p>
+    </div>
+
+    <footer>
+        🦕 PaleoRevealer · Projet OpenSource (MIT) · DoktorNand · Jurassic Mode 🦖<br/>
+        "Le code ne meurt jamais vraiment, il attend juste d’être extrait de l’ambre du legacy."<br/>
+        ⚠️ Ce tutoriel est généré à partir du README et de l’arborescence du repo (dernier commit 29 mai 2026).
+    </footer>
+</div>
+</body>
+</html>
