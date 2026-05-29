@@ -1,0 +1,72 @@
+{
+  "version": "2.1",
+  "description": "Règles hiérarchiques ASM16 → ASM32 Win32",
+  "ruleGroups": [
+    {
+      "name": "architecture",
+      "priority": 100,
+      "rules": [
+        {
+          "id": "arch_small_to_flat",
+          "condition": { "format": "SOURCE_ASM", "structure": { "memoryModel": "SMALL" } },
+          "actions": [
+            { "type": "directive", "op": "replace", "target": ".MODEL", "from": "SMALL", "to": "FLAT, STDCALL" },
+            { "type": "directive", "op": "inject", "text": ".386", "position": "top" },
+            { "type": "directive", "op": "inject", "text": "OPTION CASEMAP:NONE", "position": "top" },
+            { "type": "code", "op": "remove_pattern", "regex": "mov\\s+(ds|es),\\s*ax", "reason": "Segments implicites en FLAT" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dos_interrupts",
+      "priority": 90,
+      "rules": [
+        {
+          "id": "int21_ah09",
+          "condition": { "format": "SOURCE_ASM", "patterns": { "interrupts": { "any": { "int": "09h", "ah": "09h" } } } },
+          "actions": [
+            { "type": "code", "op": "replace_sequence", "pattern": ["mov\\s+dx,\\s*OFFSET\\s+(\\w+)", "mov\\s+ah,\\s*09h", "int\\s+21h"], "replacement": ["; [SCADASSEMBLER] INT 21h/AH=09h → WriteConsoleA", "invoke GetStdHandle, STD_OUTPUT_HANDLE", "mov hConsoleOutput, eax", "lea edx, $1", "invoke WriteConsoleA, hConsoleOutput, edx, -1, OFFSET bytesWritten, 0"] },
+            { "type": "data", "op": "inject", "name": "bytesWritten", "decl": "DWORD ?" }
+          ]
+        },
+        {
+          "id": "int21_ah4c",
+          "condition": { "format": "SOURCE_ASM", "patterns": { "interrupts": { "any": { "int": "4Ch", "ah": "4Ch" } } } },
+          "actions": [
+            { "type": "code", "op": "replace_sequence", "pattern": ["mov\\s+ax,\\s*4C([0-9a-fA-F]{2})h", "int\\s+21h"], "replacement": ["invoke ExitProcess, 0x$1"] },
+            { "type": "code", "op": "simplify", "pattern": ["mov\\s+ah,\\s*4Ch", "int\\s+21h"], "replacement": "invoke ExitProcess, 0" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "memory_access",
+      "priority": 80,
+      "rules": [
+        {
+          "id": "segment_ds_flat",
+          "condition": { "format": "SOURCE_ASM", "patterns": { "segmentOverrides": true } },
+          "actions": [
+            { "type": "code", "op": "rewrite_operand", "pattern": "ds:\\[([a-zA-Z0-9_+\\-\\s]+)\\]", "replacement": "[$1]" },
+            { "type": "code", "op": "add_comment", "text": "; [SCADASSEMBLER] Override DS: supprimé (mode FLAT)" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "control_flow",
+      "priority": 60,
+      "rules": [
+        {
+          "id": "proc_stdcall",
+          "condition": { "format": "SOURCE_ASM", "ast": { "procedures": { "any": { "type": "NEAR" } } } },
+          "actions": [
+            { "type": "code", "op": "rewrite", "pattern": "(\\w+)\\s+PROC\\s+NEAR", "replacement": "$1 PROC STDCALL" },
+            { "type": "prototype", "op": "inject", "template": "{name} PROTO STDCALL" }
+          ]
+        }
+      ]
+    }
+  ]
+}
