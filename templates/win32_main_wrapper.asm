@@ -25,8 +25,7 @@ hConsoleOutput HANDLE ?
 hConsoleInput  HANDLE ?
 bytesWritten   DWORD ?
 bytesRead      DWORD ?
-
-; <-- [SCADASSEMBLER] Zone d'injection .DATA -->
+<!-- SCADA_DATA -->
 
 .code
 
@@ -40,12 +39,13 @@ main PROC
     invoke GetStdHandle, STD_INPUT_HANDLE
     mov hConsoleInput, eax
 
-    ; <-- [SCADASSEMBLER] Zone d'injection CODE -->
+    ; Injection du code converti
+<!-- SCADA_CODE -->
 
     ; Terminaison propre
     invoke ExitProcess, 0
 main ENDP
 
-; <-- [SCADASSEMBLER] Zone d'injection PROCEDURES -->
+<!-- SCADA_PROCS -->
 
 END main
