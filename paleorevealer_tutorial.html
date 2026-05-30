@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaleoRevealer — Tutoriel Complet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f11;
+    --bg2: #16181c;
+    --bg3: #1e2128;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --accent: #4ade80;
+    --accent2: #22d3ee;
+    --accent3: #f59e0b;
+    --danger: #f87171;
+    --purple: #a78bfa;
+    --text: #e8e9ec;
+    --muted: #8b8d96;
+    --muted2: #5a5c66;
+    --code-bg: #12141a;
+    --pill-bg: rgba(74,222,128,0.1);
+    --pill-text: #4ade80;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  /* NAVIGATION */
+  nav {
+    position: fixed; top: 0; left: 0; width: 260px; height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 24px 0;
+    z-index: 100;
+  }
+  nav .logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px; font-weight: 800;
+    color: var(--accent);
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  nav .logo span { color: var(--muted); font-size: 11px; font-weight: 400; font-family: 'Inter', sans-serif; display: block; margin-top: 2px; }
+  nav ul { list-style: none; }
+  nav ul li a {
+    display: block; padding: 7px 20px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  nav ul li a:hover, nav ul li a.active {
+    color: var(--text);
+    border-left-color: var(--accent);
+    background: rgba(74,222,128,0.05);
+  }
+  nav ul li.section-title {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--muted2);
+    text-transform: uppercase;
+    padding: 16px 20px 6px;
+  }
+
+  /* MAIN CONTENT */
+  main {
+    margin-left: 260px;
+    min-height: 100vh;
+  }
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0e0f11 0%, #12161f 50%, #0e1414 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 60px 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(74,222,128,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--pill-bg); color: var(--pill-text);
+    border: 1px solid rgba(74,222,128,0.2);
+    border-radius: 100px; padding: 4px 12px;
+    font-size: 12px; font-weight: 600;
+    margin-bottom: 20px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 48px; font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #e8e9ec 30%, #4ade80 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero .subtitle {
+    font-size: 17px; color: var(--muted);
+    max-width: 640px; line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .hero-meta {
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .hero-meta .tag {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 14px;
+    font-size: 13px; color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .hero-meta .tag strong { color: var(--text); }
+
+  /* SECTIONS */
+  .content { padding: 0 60px 80px; }
+  section { padding-top: 64px; }
+  section h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px; font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  section h2 .anchor-link { font-size: 14px; color: var(--muted2); text-decoration: none; }
+  .section-lead { color: var(--muted); margin-bottom: 32px; font-size: 15px; max-width: 700px; }
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px; font-weight: 600;
+    color: var(--text);
+    margin: 32px 0 12px;
+  }
+  h4 {
+    font-size: 14px; font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 24px 0 10px;
+  }
+  p { margin-bottom: 14px; }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* CARDS */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .card .card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; color: var(--muted2); text-transform: uppercase; margin-bottom: 8px; }
+  .card .card-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: 14px; margin: 0; }
+  .card-accent { border-color: rgba(74,222,128,0.2); background: rgba(74,222,128,0.03); }
+  .card-danger { border-color: rgba(248,113,113,0.2); background: rgba(248,113,113,0.03); }
+  .card-warn { border-color: rgba(245,158,11,0.2); background: rgba(245,158,11,0.03); }
+  .card-purple { border-color: rgba(167,139,250,0.2); background: rgba(167,139,250,0.03); }
+  .card-cyan { border-color: rgba(34,211,238,0.2); background: rgba(34,211,238,0.03); }
+
+  /* CODE BLOCKS */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    margin: 16px 0 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  p code, li code {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 12.5px;
+    color: var(--accent2);
+  }
+  .comment { color: #5a6478; }
+  .kw { color: #c792ea; }
+  .str { color: #c3e88d; }
+  .num { color: #f78c6c; }
+  .func { color: #82aaff; }
+  .flag { color: var(--accent3); }
+  .cmd { color: var(--accent); }
+
+  /* PIPELINE VISUAL */
+  .pipeline {
+    display: flex; align-items: stretch;
+    gap: 0; margin: 24px 0 32px;
+    overflow-x: auto;
+  }
+  .pipe-step {
+    flex: 1; min-width: 130px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .pipe-step:first-child { border-radius: 10px 0 0 10px; }
+  .pipe-step:last-child { border-radius: 0 10px 10px 0; }
+  .pipe-step:hover { background: var(--bg3); }
+  .pipe-step.active { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.3); }
+  .pipe-step:not(:last-child)::after {
+    content: '▶';
+    position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted2); font-size: 12px;
+    z-index: 1;
+    background: var(--bg); padding: 2px;
+  }
+  .pipe-step .step-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+  .pipe-step .step-name { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 4px; }
+  .pipe-step .step-desc { font-size: 11px; color: var(--muted); }
+  .pipe-detail {
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 20px 24px;
+    margin-bottom: 24px;
+    display: none;
+  }
+  .pipe-detail.visible { display: block; }
+  .pipe-detail h4 { margin-top: 0; margin-bottom: 12px; }
+  .pipe-detail ul { list-style: none; padding: 0; }
+  .pipe-detail ul li { padding: 5px 0; font-size: 14px; color: var(--muted); border-bottom: 1px solid var(--border); }
+  .pipe-detail ul li:last-child { border-bottom: none; }
+  .pipe-detail ul li::before { content: '→ '; color: var(--accent); font-weight: 700; }
+
+  /* RULE TABLE */
+  .rule-table { width: 100%; border-collapse: collapse; margin: 16px 0 28px; }
+  .rule-table th { background: var(--bg3); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted2); padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border2); }
+  .rule-table td { padding: 10px 16px; font-size: 13px; border-bottom: 1px solid var(--border); color: var(--muted); }
+  .rule-table tr:hover td { background: var(--bg3); }
+  .rule-table td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--text); font-size: 12px; }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 100px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.03em;
+  }
+  .badge-crit { background: rgba(248,113,113,0.15); color: var(--danger); border: 1px solid rgba(248,113,113,0.25); }
+  .badge-high { background: rgba(245,158,11,0.15); color: var(--accent3); border: 1px solid rgba(245,158,11,0.25); }
+  .badge-med { background: rgba(34,211,238,0.12); color: var(--accent2); border: 1px solid rgba(34,211,238,0.2); }
+  .badge-low { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+  .badge-info { background: rgba(74,222,128,0.1); color: var(--accent); border: 1px solid rgba(74,222,128,0.2); }
+
+  /* CALLOUTS */
+  .callout {
+    border-radius: 10px; padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout p { margin: 0; }
+  .callout-tip { background: rgba(74,222,128,0.06); border: 1px solid rgba(74,222,128,0.15); color: #b5f5c8; }
+  .callout-warn { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.18); color: #fde68a; }
+  .callout-danger { background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.18); color: #fecaca; }
+  .callout-info { background: rgba(34,211,238,0.06); border: 1px solid rgba(34,211,238,0.16); color: #a5f3fc; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+  .tab-btn {
+    background: none; border: none; border-bottom: 2px solid transparent;
+    color: var(--muted); font-size: 14px; padding: 10px 20px;
+    cursor: pointer; transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: -1px;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .tab-wrap { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 20px 0 28px; }
+  .tab-panels { padding: 20px; background: var(--bg2); }
+
+  /* ARCH TREE */
+  .arch-tree { font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.9; }
+  .arch-tree .dir { color: var(--accent2); }
+  .arch-tree .file { color: var(--muted); }
+  .arch-tree .comment { color: #5a6478; }
+
+  /* PLUGIN GRID */
+  .plugin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0 28px; }
+  .plugin-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .plugin-card .plugin-name { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); margin-bottom: 6px; }
+  .plugin-card .plugin-title { font-weight: 600; font-size: 15px; color: var(--text); margin-bottom: 8px; }
+  .plugin-card p { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+  .plugin-card ul { list-style: none; padding: 0; }
+  .plugin-card ul li { font-size: 12.5px; color: var(--muted); padding: 3px 0; }
+  .plugin-card ul li::before { content: '• '; color: var(--accent); }
+
+  /* LIMITS */
+  .limits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0 28px; }
+  @media (max-width: 800px) { .limits-grid { grid-template-columns: 1fr; } }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+  /* FOOTER */
+  footer { padding: 40px 60px; border-top: 1px solid var(--border); color: var(--muted2); font-size: 13px; display: flex; justify-content: space-between; align-items: center; margin-left: 0; }
+  footer span { color: var(--accent); }
+
+  /* INTERACTIVE RULE BUILDER */
+  .rule-builder { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0 28px; }
+  .rule-builder label { font-size: 12px; font-weight: 600; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+  .rule-builder select, .rule-builder input[type=text] {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 6px; color: var(--text); padding: 8px 12px;
+    font-size: 14px; font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 16px;
+  }
+  .rule-builder button {
+    background: rgba(74,222,128,0.12); border: 1px solid rgba(74,222,128,0.3);
+    color: var(--accent); padding: 8px 20px; border-radius: 6px;
+    font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif;
+    transition: background 0.15s;
+  }
+  .rule-builder button:hover { background: rgba(74,222,128,0.2); }
+  .rule-output { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin-top: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; white-space: pre; overflow-x: auto; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    🦕 PaleoRevealer
+    <span>Scadassembler v2.0 — Tutoriel</span>
+  </div>
+  <ul>
+    <li class="section-title">Introduction</li>
+    <li><a href="#overview" class="active">Vue d'ensemble</a></li>
+    <li><a href="#install">Installation & démarrage</a></li>
+    <li class="section-title">Architecture</li>
+    <li><a href="#architecture">Structure du projet</a></li>
+    <li><a href="#pipeline">Pipeline en 5 phases</a></li>
+    <li><a href="#formats">Formats binaires (MZ/COM)</a></li>
+    <li class="section-title">Fonctionnalités</li>
+    <li><a href="#rule-engine">Moteur de règles</a></li>
+    <li><a href="#plugins">Plugins spécialisés</a></li>
+    <li><a href="#backends">Backends de sortie</a></li>
+    <li><a href="#ui">Interface Web</a></li>
+    <li class="section-title">Utilisation</li>
+    <li><a href="#cli">CLI — Guide complet</a></li>
+    <li><a href="#examples">Exemples concrets</a></li>
+    <li class="section-title">Customisation</li>
+    <li><a href="#rules-custom">Écrire ses propres règles</a></li>
+    <li><a href="#plugins-extend">Étendre les plugins</a></li>
+    <li><a href="#backends-extend">Nouveaux backends</a></li>
+    <li class="section-title">Limites & Roadmap</li>
+    <li><a href="#limits">Limites actuelles</a></li>
+    <li><a href="#roadmap">Pistes d'extension</a></li>
+  </ul>
+</nav>
+
+<main>
+<div class="hero">
+  <div class="hero-badge">🦕 Jurassic Mode — DeadCode Resurrection</div>
+  <h1>PaleoRevealer<br>Scadassembler v2.0</h1>
+  <p class="subtitle">Framework de migration ASM x86 16-bit (MS-DOS) → ASM x86 32-bit (Win32), avec support des formats binaires MZ/COM, moteur de règles hiérarchiques JSON, plugins IoT/SCADA et génération PE directe.</p>
+  <div class="hero-meta">
+    <div class="tag"><strong>Langage :</strong> JavaScript (Node.js ≥14)</div>
+    <div class="tag"><strong>Dépendances :</strong> 0 (aucune !)</div>
+    <div class="tag"><strong>Licence :</strong> MIT</div>
+    <div class="tag"><strong>Cible :</strong> x86 16→32 bit</div>
+    <div class="tag"><strong>Formats in :</strong> .ASM / .COM / .EXE (MZ)</div>
+    <div class="tag"><strong>Formats out :</strong> MASM / NASM / PE binaire</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ═══════════════════════════════════════════ OVERVIEW -->
+<section id="overview">
+  <h2>Vue d'ensemble <a href="#overview" class="anchor-link">#</a></h2>
+  <p class="section-lead">PaleoRevealer (fork étendu de Scadassembler) est un outil de <strong>résurrection de code mort</strong> — il permet de migrer des programmes assembleur DOS des années 80-90 vers Win32 modern, en particulier pour les systèmes embarqués, SCADA et IoT industriels.</p>
+
+  <div class="card-grid">
+    <div class="card card-accent">
+      <div class="card-label">Objectif principal</div>
+      <div class="card-title">Migration legacy</div>
+      <p>Convertir des programmes ASM 16-bit (DOS) en code ASM 32-bit assemblable avec MASM ou NASM, ou générer directement un exécutable PE Win32.</p>
+    </div>
+    <div class="card card-cyan">
+      <div class="card-label">Domaine cible</div>
+      <div class="card-title">SCADA & IoT</div>
+      <p>Spécialisé dans les drivers matériels (ports série/parallèle, timers, PLC) et les systèmes de contrôle industriels à migrer.</p>
+    </div>
+    <div class="card card-purple">
+      <div class="card-label">Différenciation</div>
+      <div class="card-title">DeadCode Revival</div>
+      <p>Le «&nbsp;Jurassic Mode&nbsp;» permet de ressusciter du code considéré comme perdu : binaires sans source, .COM TSR, programmes MZ avec segments multiples.</p>
+    </div>
+    <div class="card card-warn">
+      <div class="card-label">Architecture clé</div>
+      <div class="card-title">Règles JSON hiérarchiques</div>
+      <p>11 catégories de règles avec cascade, résolution de conflits par priorité et extensibilité totale sans modifier le code JavaScript.</p>
+    </div>
+  </div>
+
+  <h3>Qu'est-ce que PaleoRevealer fait exactement ?</h3>
+  <p>Concrètement, l'outil prend en entrée :</p>
+  <ul style="list-style:none;padding:0;">
+    <li style="padding:6px 0;color:var(--muted);">→ Un <strong style="color:var(--text);">fichier source .ASM</strong> MS-DOS (instructions 16-bit, segments, interruptions DOS…)</li>
+    <li style="padding:6px 0;color:var(--muted);">→ Un <strong style="color:var(--text);">binaire .EXE (format MZ)</strong> sans code source disponible</li>
+    <li style="padding:6px 0;color:var(--muted);">→ Un <strong style="color:var(--text);">programme .COM</strong> (format plat, max 64 Ko)</li>
+  </ul>
+  <p style="margin-top:12px;">Et produit en sortie :</p>
+  <ul style="list-style:none;padding:0;">
+    <li style="padding:6px 0;color:var(--muted);">← Un <strong style="color:var(--accent);">fichier MASM</strong> (.asm) assemblable avec ML.exe / MASM32</li>
+    <li style="padding:6px 0;color:var(--muted);">← Un <strong style="color:var(--accent);">fichier NASM</strong> (.asm) assemblable avec nasm.exe</li>
+    <li style="padding:6px 0;color:var(--muted);">← Un <strong style="color:var(--accent);">binaire PE Win32</strong> (.exe) directement exécutable</li>
+    <li style="padding:6px 0;color:var(--muted);">← Un <strong style="color:var(--accent);">rapport JSON</strong> des transformations, warnings et review manuelles requises</li>
+  </ul>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ INSTALL -->
+<section id="install">
+  <h2>Installation & démarrage <a href="#install" class="anchor-link">#</a></h2>
+  <p class="section-lead">PaleoRevealer n'a <strong>aucune dépendance npm</strong>. Il tourne avec Node.js natif ≥ 14. L'installation se résume à cloner et lancer.</p>
+
+  <h3>Prérequis</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-label">Obligatoire</div>
+      <div class="card-title">Node.js ≥ 14.0.0</div>
+      <p>Vérifié dans <code>package.json</code> via le champ <code>engines</code>. Aucun module externe requis.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Facultatif (pour assemblage)</div>
+      <div class="card-title">MASM32 / NASM</div>
+      <p>Pour assembler le code généré. PaleoRevealer génère la source, pas besoin d'assembleur pour la conversion.</p>
+    </div>
+  </div>
+
+  <h3>Clonage et démarrage</h3>
+<pre><span class="comment"># 1. Cloner le dépôt</span>
+<span class="cmd">git clone</span> https://github.com/doktornand/PaleoRevealer.git
+<span class="cmd">cd</span> PaleoRevealer
+
+<span class="comment"># 2. Installer les dépendances (aucune, mais npm install finalise le projet)</span>
+<span class="cmd">npm install</span>
+
+<span class="comment"># 3. Tester l'installation</span>
+<span class="cmd">node cli.js</span> --help
+
+<span class="comment"># 4. Lancer la suite de tests</span>
+<span class="cmd">npm test</span>
+<span class="cmd">npm run test:mz</span>     <span class="comment"># tests du parser MZ uniquement</span>
+<span class="cmd">npm run test:rules</span>  <span class="comment"># tests du moteur de règles</span></pre>
+
+  <h3>Premier test — conversion source ASM</h3>
+<pre><span class="comment"># Conversion la plus simple : source ASM 16-bit → MASM 32-bit</span>
+<span class="cmd">node cli.js</span> mon_programme.asm
+
+<span class="comment"># Avec rapport JSON et format NASM</span>
+<span class="cmd">node cli.js</span> <span class="flag">-f</span> nasm <span class="flag">--report</span> <span class="flag">-o</span> sortie.asm mon_programme.asm
+
+<span class="comment"># Binaire MZ → PE Win32 (résurrection depuis binaire)</span>
+<span class="cmd">node cli.js</span> <span class="flag">--mz-to-pe</span> <span class="flag">-o</span> nouveau.exe vieux_programme.exe
+
+<span class="comment"># Programme .COM TSR → PE</span>
+<span class="cmd">node cli.js</span> <span class="flag">--com-to-pe</span> <span class="flag">-o</span> moderne.exe ancien_tsr.com</pre>
+
+  <div class="callout callout-tip">
+    <span class="callout-icon">💡</span>
+    <p>Le point d'entrée principal est <code>src/core/converter.js</code> (déclaré dans <code>package.json</code> → <code>"main"</code>). La CLI est dans <code>cli.js</code> à la racine, installable globalement via <code>npm link</code> (commande : <code>scadassembler</code>).</p>
+  </div>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ ARCHITECTURE -->
+<section id="architecture">
+  <h2>Structure du projet <a href="#architecture" class="anchor-link">#</a></h2>
+  <p class="section-lead">Le projet est organisé en couches clairement séparées : chargeurs de formats binaires, noyau de conversion, backends de sortie, plugins spécialisés, et configuration JSON entièrement externaliste.</p>
+
+  <div class="tab-wrap">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('arch-tree', 'arch')">Arborescence</button>
+      <button class="tab-btn" onclick="showTab('arch-roles', 'arch')">Rôles des modules</button>
+      <button class="tab-btn" onclick="showTab('arch-config', 'arch')">Configuration JSON</button>
+    </div>
+    <div class="tab-panels">
+      <div class="tab-content active" id="arch-tree">
+        <div class="arch-tree">
+<pre style="background:none;border:none;padding:0;margin:0;"><span class="dir">PaleoRevealer/</span>
+├── <span class="cmd">cli.js</span>                     <span class="comment">← Point d'entrée CLI</span>
+├── <span class="file">package.json</span>
+│
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">loader/</span>                <span class="comment">← Parsers des formats d'entrée</span>
+│   │   ├── mz_parser.js       <span class="comment">← Parser complet format MZ (.EXE DOS)</span>
+│   │   ├── com_parser.js      <span class="comment">← Parser format .COM (flat binary)</span>
+│   │   ├── pe_builder.js      <span class="comment">← Générateur de binaires PE Win32</span>
+│   │   └── binary_utils.js    <span class="comment">← Utilitaires bas niveau (read16, read32…)</span>
+│   │
+│   ├── <span class="dir">core/</span>                  <span class="comment">← Cerveau du framework</span>
+│   │   ├── converter.js       <span class="comment">← Pipeline principal (5 phases)</span>
+│   │   ├── rule_engine.js     <span class="comment">← Moteur de règles hiérarchiques</span>
+│   │   ├── cfg_builder.js     <span class="comment">← Constructeur du Control Flow Graph</span>
+│   │   └── dataflow_analyzer.js <span class="comment">← Analyse des dépendances de données</span>
+│   │
+│   ├── <span class="dir">backends/</span>              <span class="comment">← Générateurs de code de sortie</span>
+│   │   ├── masm_backend.js    <span class="comment">← Émetteur MASM (ML.exe compatible)</span>
+│   │   ├── nasm_backend.js    <span class="comment">← Émetteur NASM</span>
+│   │   └── pe_backend.js      <span class="comment">← Émetteur binaire PE direct</span>
+│   │
+│   └── <span class="dir">plugins/</span>               <span class="comment">← Extensions spécialisées</span>
+│       ├── bcd_emulator.js        <span class="comment">← Émulation instructions BCD (AAA, DAA…)</span>
+│       ├── farcall_resolver.js    <span class="comment">← Résolution far calls (CALLF, JMPF…)</span>
+│       ├── iot_bridge.js          <span class="comment">← Bridge IoT (ports série, timer, GPIO)</span>
+│       └── interrupt_dispatcher.js <span class="comment">← Dispatch INT 21h / BIOS → Win32 API</span>
+│
+├── <span class="dir">config/</span>                    <span class="comment">← Toute la logique en JSON</span>
+│   ├── hierarchical_rules.json    <span class="comment">← Les 11 catégories de règles</span>
+│   ├── executable_formats.json    <span class="comment">← Descripteurs de formats MZ/PE</span>
+│   ├── pe_templates.json          <span class="comment">← Templates PE (headers, sections)</span>
+│   └── iot_mappings.json          <span class="comment">← Mappings matériels (ports → APIs)</span>
+│
+├── <span class="dir">ui/</span>                        <span class="comment">← Interface web interactive</span>
+├── <span class="dir">docs/</span>                      <span class="comment">← Documentation technique</span>
+│   ├── ARCHITECTURE.md
+│   ├── MZ_FORMAT.md
+│   └── RULES_SCHEMA.md
+└── <span class="dir">tests/</span>                     <span class="comment">← Suite de tests</span>
+    ├── run_tests.js
+    ├── test_mz_parser.js
+    └── test_rule_engine.js</pre>
+        </div>
+      </div>
+
+      <div class="tab-content" id="arch-roles">
+        <table class="rule-table">
+          <thead><tr><th>Module</th><th>Responsabilité</th><th>Dépend de</th></tr></thead>
+          <tbody>
+            <tr><td>cli.js</td><td>Parse les args CLI (commander.js-like), orchestre le pipeline</td><td>core/converter.js</td></tr>
+            <tr><td>loader/mz_parser.js</td><td>Lit et décode les headers MZ, table de relocation, segments</td><td>binary_utils.js</td></tr>
+            <tr><td>loader/com_parser.js</td><td>Charge un .COM (image plate 64K), simule le PSP</td><td>binary_utils.js</td></tr>
+            <tr><td>loader/pe_builder.js</td><td>Construit un binaire PE Win32 valide byte par byte</td><td>pe_templates.json</td></tr>
+            <tr><td>core/converter.js</td><td>Orchestre les 5 phases, point d'entrée programmatique</td><td>Tous les modules</td></tr>
+            <tr><td>core/rule_engine.js</td><td>Charge les règles JSON, évalue les conditions, applique les transformations avec cascade</td><td>hierarchical_rules.json</td></tr>
+            <tr><td>core/cfg_builder.js</td><td>Construit le graphe de flux de contrôle à partir des instructions</td><td>—</td></tr>
+            <tr><td>core/dataflow_analyzer.js</td><td>Analyse les dépendances registre/mémoire pour le contexte des règles</td><td>cfg_builder.js</td></tr>
+            <tr><td>backends/masm_backend.js</td><td>Génère du code MASM 32-bit syntaxiquement correct</td><td>core/rule_engine.js</td></tr>
+            <tr><td>backends/nasm_backend.js</td><td>Génère du code NASM 32-bit</td><td>core/rule_engine.js</td></tr>
+            <tr><td>backends/pe_backend.js</td><td>Génère directement un .exe PE (sans passer par un assembleur)</td><td>loader/pe_builder.js</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-content" id="arch-config">
+        <p style="color:var(--muted);margin-bottom:16px;">Toute la logique de conversion est externalisée dans <code>config/</code>. Aucun recompilation n'est nécessaire pour modifier le comportement du framework.</p>
+        <table class="rule-table">
+          <thead><tr><th>Fichier</th><th>Contenu</th><th>Modifiable sans code</th></tr></thead>
+          <tbody>
+            <tr><td>hierarchical_rules.json</td><td>Les 11 catégories de règles avec priorités, conditions et transformations</td><td><span class="badge badge-info">✓ Oui</span></td></tr>
+            <tr><td>executable_formats.json</td><td>Descripteurs des formats MZ et PE (offsets, magic bytes, structures)</td><td><span class="badge badge-high">⚠ Avancé</span></td></tr>
+            <tr><td>pe_templates.json</td><td>Templates de headers PE, sections .text/.data/.bss par défaut</td><td><span class="badge badge-info">✓ Oui</span></td></tr>
+            <tr><td>iot_mappings.json</td><td>Table de correspondance ports matériels ↔ APIs Win32 modernes</td><td><span class="badge badge-info">✓ Oui</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ PIPELINE -->
+<section id="pipeline">
+  <h2>Pipeline de conversion — 5 phases <a href="#pipeline" class="anchor-link">#</a></h2>
+  <p class="section-lead">Chaque fichier entrant traverse séquentiellement 5 phases. Cliquez sur une phase pour en voir les détails.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step active" onclick="showPhase(1)">
+      <div class="step-num">PHASE 01</div>
+      <div class="step-name">Chargement</div>
+      <div class="step-desc">Détection format</div>
+    </div>
+    <div class="pipe-step" onclick="showPhase(2)">
+      <div class="step-num">PHASE 02</div>
+      <div class="step-name">Analyse</div>
+      <div class="step-desc">CFG + Dataflow</div>
+    </div>
+    <div class="pipe-step" onclick="showPhase(3)">
+      <div class="step-num">PHASE 03</div>
+      <div class="step-name">Transformation</div>
+      <div class="step-desc">Rule Engine</div>
+    </div>
+    <div class="pipe-step" onclick="showPhase(4)">
+      <div class="step-num">PHASE 04</div>
+      <div class="step-name">Émission</div>
+      <div class="step-desc">Backend codegen</div>
+    </div>
+    <div class="pipe-step" onclick="showPhase(5)">
+      <div class="step-num">PHASE 05</div>
+      <div class="step-name">Validation</div>
+      <div class="step-desc">Cohérence & review</div>
+    </div>
+  </div>
+
+  <div class="pipe-detail visible" id="phase-1">
+    <h4>Phase 1 — Chargement (Loader)</h4>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">Le loader détecte automatiquement le format d'entrée et dispatche vers le parser approprié.</p>
+    <ul>
+      <li>Détection par magic bytes : <code>0x4D 0x5A</code> → MZ, analyse de l'en-tête DOS complet (28+ bytes)</li>
+      <li>Lecture de la table de relocation MZ (entrées de 4 bytes : segment:offset)</li>
+      <li>Extraction de l'entry point (CS:IP relocalisé), de la pile (SS:SP) et des segments logiques</li>
+      <li>Pour .COM : chargement de l'image plate 64K, simulation du PSP à l'offset 0x100</li>
+      <li>Pour .ASM : parsing du source texte ligne par ligne</li>
+      <li>Détection heuristique des zones code/data dans les binaires sans symboles</li>
+    </ul>
+  </div>
+  <div class="pipe-detail" id="phase-2">
+    <h4>Phase 2 — Analyse statique</h4>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">Construction des représentations intermédiaires nécessaires aux règles de transformation.</p>
+    <ul>
+      <li><strong>CFG Builder</strong> : graphe de flux de contrôle, blocs de base, arêtes de branchement</li>
+      <li><strong>Dataflow Analyzer</strong> : calcul des valeurs live/dead des registres, dépendances entre instructions</li>
+      <li><strong>Pattern Detector</strong> : reconnaissance des idiomes SCADA (accès ports I/O, boucles polling, drivers série)</li>
+      <li>Score de complexité calculé (utilisé comme condition dans les règles JSON)</li>
+      <li>Détection des far calls, interruptions DOS/BIOS, instructions BCD obsolètes</li>
+    </ul>
+  </div>
+  <div class="pipe-detail" id="phase-3">
+    <h4>Phase 3 — Transformation (Rule Engine)</h4>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">Cœur du framework : application des 11 catégories de règles en cascade, du plus prioritaire au moins prioritaire.</p>
+    <ul>
+      <li>Cascade : <code>architecture_rules</code> → <code>format_rules</code> → <code>domain_rules</code> → … → <code>fallback_rules</code></li>
+      <li>Chaque règle évalue sa <code>condition</code> sur le contexte courant de l'instruction</li>
+      <li>En cas de conflit, <code>priority_override</code> : la règle de priorité la plus haute l'emporte</li>
+      <li>Conflit à même priorité → marquage <code>UNRESOLVED</code>, review manuelle requise</li>
+      <li>Les plugins (BCD, FarCall, IoT, INT) sont invoqués depuis cette phase</li>
+    </ul>
+  </div>
+  <div class="pipe-detail" id="phase-4">
+    <h4>Phase 4 — Émission (Backends)</h4>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">Le résultat des transformations est rendu dans le format cible.</p>
+    <ul>
+      <li><strong>MASM backend</strong> : génère un .asm avec prologue <code>.386 / .MODEL FLAT, STDCALL</code>, headers Win32, directives MASM valides</li>
+      <li><strong>NASM backend</strong> : syntaxe NASM, sections <code>[section .text]</code>, <code>extern</code> pour les imports Win32</li>
+      <li><strong>PE backend</strong> : construction directe du binaire PE (headers DOS stub + PE signature + COFF header + Optional header + sections)</li>
+      <li>Insertion de commentaires de contexte (instruction originale, raison de la transformation)</li>
+      <li>Marquage <code>;REVIEW:</code> pour les transformations incomplètes nécessitant une relecture humaine</li>
+    </ul>
+  </div>
+  <div class="pipe-detail" id="phase-5">
+    <h4>Phase 5 — Validation</h4>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:12px;">Vérifications de cohérence post-génération avant livraison du résultat.</p>
+    <ul>
+      <li>Vérification de la présence d'un point d'entrée valide dans le code généré</li>
+      <li>Validation que le modèle mémoire est bien FLAT (pas de références de segments résiduelles)</li>
+      <li>Présence des prototypes Win32 nécessaires (imports, EXTERN déclarations)</li>
+      <li>Comptage et rapport des transformations marquées <code>;REVIEW:</code></li>
+      <li>Génération du rapport JSON si <code>--report</code> est activé</li>
+    </ul>
+  </div>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ FORMATS -->
+<section id="formats">
+  <h2>Formats binaires — MZ & COM <a href="#formats" class="anchor-link">#</a></h2>
+  <p class="section-lead">L'une des capacités phares de PaleoRevealer est de travailler directement sur les <strong>binaires DOS</strong>, sans code source. Le format MZ est décodé champ par champ.</p>
+
+  <h3>Format MZ — Structure complète</h3>
+  <div class="card" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:2;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead><tr style="border-bottom:1px solid var(--border2);">
+        <th style="text-align:left;padding:6px 12px;color:var(--muted2);font-size:11px;text-transform:uppercase;letter-spacing:.05em;">Offset</th>
+        <th style="text-align:left;padding:6px 12px;color:var(--muted2);font-size:11px;text-transform:uppercase;letter-spacing:.05em;">Taille</th>
+        <th style="text-align:left;padding:6px 12px;color:var(--muted2);font-size:11px;text-transform:uppercase;letter-spacing:.05em;">Champ</th>
+        <th style="text-align:left;padding:6px 12px;color:var(--muted2);font-size:11px;text-transform:uppercase;letter-spacing:.05em;">Utilisation par PaleoRevealer</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:5px 12px;color:var(--accent3);">0x00</td><td style="padding:5px 12px;color:var(--muted);">2 B</td>
+          <td style="padding:5px 12px;color:var(--text);">Magic "MZ"</td>
+          <td style="padding:5px 12px;color:var(--muted);">Vérification du format</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:5px 12px;color:var(--accent3);">0x02</td><td style="padding:5px 12px;color:var(--muted);">2 B</td>
+          <td style="padding:5px 12px;color:var(--text);">lastPageBytes</td>
+          <td style="padding:5px 12px;color:var(--muted);">Calcul taille image programme</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:5px 12px;color:var(--accent3);">0x04</td><td style="padding:5px 12px;color:var(--muted);">2 B</td>
+          <td style="padding:5px 12px;color:var(--text);">pagesInFile</td>
+          <td style="padding:5px 12px;color:var(--muted);">Calcul taille : pages × 512</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:5px 12px;color:var(--accent3);">0x06</td><td style="padding:5px 12px;color:var(--muted);">2 B</td>
+          <td style="padding:5px 12px;color:var(--text);">relocationCount</td>
+          <td style="padding:5px 12px;color:var(--muted);">Nb entrées table de relocation</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:5px 12px;color:var(--accent3);">0x08</td><td style="padding:5px 12px;color:var(--muted);">2 B</td>
+          <td style="padding:5px 12px;color:var(--text);">headerParagraphs</td>
+          <td style="padding:5px 12px;color:var(--muted);">Offset début programme = × 16</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:5px 12px;color:var(--accent3);">0x14</td><td style="padding:5px 12px;color:var(--muted);">2 B</td>
+          <td style="padding:5px 12px;color:var(--text);">initialIP</td>
+          <td style="padding:5px 12px;color:var(--muted);">Entry point (partie offset)</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:5px 12px;color:var(--accent3);">0x16</td><td style="padding:5px 12px;color:var(--muted);">2 B</td>
+          <td style="padding:5px 12px;color:var(--text);">initialCS</td>
+          <td style="padding:5px 12px;color:var(--muted);">Entry point (partie segment)</td>
+        </tr>
+        <tr>
+          <td style="padding:5px 12px;color:var(--accent3);">0x3C</td><td style="padding:5px 12px;color:var(--muted);">4 B</td>
+          <td style="padding:5px 12px;color:var(--text);">e_lfanew</td>
+          <td style="padding:5px 12px;color:var(--muted);">Offset header PE (si NE/PE embarqué)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Conversion MZ → PE : les calculs clés</h3>
+<pre><span class="comment">// Taille de l'image programme</span>
+<span class="kw">const</span> program_size = pagesInFile * <span class="num">512</span>
+  - (lastPageBytes ? <span class="num">512</span> - lastPageBytes : <span class="num">0</span>)
+  - headerParagraphs * <span class="num">16</span>;
+
+<span class="comment">// Entry point physique DOS</span>
+<span class="kw">const</span> ep_physical = (loading_segment + initialCS) * <span class="num">16</span> + initialIP;
+
+<span class="comment">// Conversion relocation MZ → RVA PE</span>
+<span class="comment">// Entrée MZ : {segment: 0xXXXX, offset: 0xYYYY}</span>
+<span class="kw">const</span> rva = segment * <span class="num">16</span> + offset;
+
+<span class="comment">// Mapping segments DOS → sections PE</span>
+<span class="comment">// CODE  → .text  (EXECUTE | READ)</span>
+<span class="comment">// DATA  → .data  (READ | WRITE)</span>
+<span class="comment">// BSS   → .bss   (READ | WRITE | uninitialized)</span></pre>
+
+  <h3>Format COM — spécificités</h3>
+  <div class="callout callout-info">
+    <span class="callout-icon">📌</span>
+    <p>Un fichier .COM est une image mémoire plate : pas de header, pas de segments, pas de table de relocation. Il est chargé à l'offset <strong>0x100</strong> du segment de code (le PSP occupe les 256 premiers bytes). Tous les offsets internes sont donc relatifs à 0x100.</p>
+  </div>
+<pre><span class="comment">// Conversion .COM → PE</span>
+<span class="kw">const</span> com_entrypoint_rva = <span class="num">0x100</span>;  <span class="comment">// PSP simulé si nécessaire</span>
+
+<span class="comment">// Pour chaque offset interne dans le .COM :</span>
+<span class="kw">const</span> pe_rva = internal_offset - <span class="num">0x100</span>;
+<span class="comment">// Le PSP est simulé dans la section .data si le code y accède</span></pre>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ RULE ENGINE -->
+<section id="rule-engine">
+  <h2>Moteur de règles hiérarchiques <a href="#rule-engine" class="anchor-link">#</a></h2>
+  <p class="section-lead">C'est <strong>le composant central</strong> du framework. 11 catégories de règles JSON définissent entièrement le comportement de la conversion. Le moteur les évalue en cascade, du plus prioritaire au moins prioritaire.</p>
+
+  <h3>Les 11 catégories et leur rôle</h3>
+  <table class="rule-table">
+    <thead><tr><th>Catégorie</th><th>Priorité</th><th>Responsabilité</th><th>Exemple de transformation</th></tr></thead>
+    <tbody>
+      <tr><td>architecture_rules</td><td><span class="badge badge-crit">CRITICAL</span></td><td>Changement 16→32 bit, élimination de la segmentation</td><td><code>AX</code> → <code>EAX</code>, <code>MOV AX,BX</code> → <code>MOV EAX,EBX</code></td></tr>
+      <tr><td>format_rules</td><td><span class="badge badge-crit">CRITICAL</span></td><td>Conversion .COM/.EXE → PE, relocations</td><td>PSP 0x100 → EntryPoint RVA, segments → sections</td></tr>
+      <tr><td>domain_rules</td><td><span class="badge badge-high">HIGH</span></td><td>Patterns SCADA/IoT spécifiques</td><td><code>IN AL,0x3F8</code> → <code>ReadFile(hCOM1,...)</code></td></tr>
+      <tr><td>pattern_rules</td><td><span class="badge badge-high">HIGH</span></td><td>Far calls, BCD, hooks, chaînes <code>$</code></td><td><code>CALLF</code> → <code>CALL FAR PTR</code> → réécriture flat</td></tr>
+      <tr><td>instruction_rules</td><td><span class="badge badge-med">MEDIUM</span></td><td>Conversion instruction par instruction</td><td><code>LODSB</code> → <code>LODSB</code> (inchangé ou équivalent 32-bit)</td></tr>
+      <tr><td>interrupt_rules</td><td><span class="badge badge-med">MEDIUM</span></td><td>INT 21h, 10h, 16h → Win32 APIs</td><td><code>INT 21h / AH=09h</code> → <code>WriteConsoleA()</code></td></tr>
+      <tr><td>register_rules</td><td><span class="badge badge-med">MEDIUM</span></td><td>Registres 16-bit → 32-bit, élimination segments</td><td><code>DS:, ES:, SS:</code> → suppression (flat model)</td></tr>
+      <tr><td>segment_rules</td><td><span class="badge badge-med">MEDIUM</span></td><td>Modèle mémoire segmenté → FLAT</td><td><code>.MODEL SMALL</code> → <code>.MODEL FLAT, STDCALL</code></td></tr>
+      <tr><td>directive_rules</td><td><span class="badge badge-low">LOW</span></td><td>Directives CPU et mode</td><td><code>.8086</code> → <code>.386</code>, <code>.186</code> → <code>.386</code></td></tr>
+      <tr><td>macro_rules</td><td><span class="badge badge-low">LOW</span></td><td>Templates et macros Win32</td><td>Insertion de <code>OPTION CASEMAP:NONE</code>, imports DLL</td></tr>
+      <tr><td>fallback_rules</td><td><span class="badge badge-info">INFO</span></td><td>Marquage tout ce qui n'a pas été traité</td><td>Ajout de <code>;REVIEW: instruction non gérée</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Structure JSON d'une règle</h3>
+  <p>Chaque règle dans <code>config/hierarchical_rules.json</code> suit le schéma suivant :</p>
+<pre>{
+  <span class="str">"id"</span>: <span class="str">"interrupt_dos_write_string"</span>,
+  <span class="str">"name"</span>: <span class="str">"INT 21h / AH=09h → WriteConsoleA"</span>,
+
+  <span class="str">"condition"</span>: {
+    <span class="comment">// Égalité simple</span>
+    <span class="str">"instruction"</span>: <span class="str">"INT"</span>,
+    <span class="str">"operand"</span>: <span class="str">"21h"</span>,
+
+    <span class="comment">// Alternatives (OR logique)</span>
+    <span class="str">"register_ah"</span>: <span class="str">"09h | 0x09"</span>,
+
+    <span class="comment">// Comparateur numérique</span>
+    <span class="str">"complexity_score"</span>: { <span class="str">"gt"</span>: <span class="num">3</span> },
+
+    <span class="comment">// Regex</span>
+    <span class="str">"source_pattern"</span>: { <span class="str">"regex"</span>: <span class="str">"^INT\\s+21h"</span>, <span class="str">"flags"</span>: <span class="str">"i"</span> }
+  },
+
+  <span class="str">"transformations"</span>: {
+    <span class="comment">// Code source généré (tableau = lignes)</span>
+    <span class="str">"setup_code"</span>: [
+      <span class="str">"    ; INT 21h/09h → WriteConsoleA"</span>,
+      <span class="str">"    INVOKE WriteConsoleA, hStdOut, DX, -1, NULL, NULL"</span>
+    ],
+
+    <span class="comment">// Template avec variables</span>
+    <span class="str">"api_call"</span>: <span class="str">"WriteConsoleA(hStdOut, {dx_ptr}, {count}, NULL, NULL)"</span>,
+
+    <span class="comment">// Mapping registres</span>
+    <span class="str">"register_mapping"</span>: {
+      <span class="str">"DX"</span>: <span class="str">"EDX"</span>,
+      <span class="str">"AX"</span>: <span class="str">"EAX"</span>
+    }
+  },
+
+  <span class="comment">// Avertissements inclus dans le rapport</span>
+  <span class="str">"warnings"</span>: [
+    <span class="str">"Vérifier que hStdOut est bien initialisé avec GetStdHandle"</span>
+  ],
+
+  <span class="comment">// Effets de bord documentés</span>
+  <span class="str">"side_effects"</span>: [
+    <span class="str">"Requiert INCLUDE windows.inc dans le prologue"</span>
+  ]
+}</pre>
+
+  <h3>Ordre de cascade et résolution de conflits</h3>
+<pre><span class="comment">// Ordre d'évaluation dans rule_engine.js</span>
+<span class="kw">const</span> CASCADE_ORDER = [
+  <span class="str">"architecture_rules"</span>,   <span class="comment">// 1er évalué → priorité absolue</span>
+  <span class="str">"format_rules"</span>,
+  <span class="str">"domain_rules"</span>,
+  <span class="str">"pattern_rules"</span>,
+  <span class="str">"instruction_rules"</span>,
+  <span class="str">"interrupt_rules"</span>,
+  <span class="str">"register_rules"</span>,
+  <span class="str">"segment_rules"</span>,
+  <span class="str">"directive_rules"</span>,
+  <span class="str">"macro_rules"</span>,
+  <span class="str">"fallback_rules"</span>       <span class="comment">// Dernier → ramasse tout le reste</span>
+];
+
+<span class="comment">// Résolution de conflit</span>
+<span class="kw">if</span> (rule_A.priority === rule_B.priority) {
+  result.status = <span class="str">"UNRESOLVED"</span>;   <span class="comment">// → review manuelle</span>
+} <span class="kw">else</span> {
+  <span class="comment">// La plus haute priorité gagne (CRITICAL > HIGH > MEDIUM > LOW > INFO)</span>
+  winner = rule_A.priority &gt; rule_B.priority ? rule_A : rule_B;
+}</pre>
+
+  <h3>Générateur de règles interactif</h3>
+  <p style="color:var(--muted);margin-bottom:16px;">Construisez une règle JSON à partir du formulaire :</p>
+  <div class="rule-builder">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div>
+        <label>Catégorie</label>
+        <select id="rb-cat">
+          <option>instruction_rules</option>
+          <option>interrupt_rules</option>
+          <option>register_rules</option>
+          <option>domain_rules</option>
+          <option>pattern_rules</option>
+          <option>fallback_rules</option>
+        </select>
+        <label>Instruction (condition)</label>
+        <input type="text" id="rb-instr" placeholder="ex: INT, CALLF, AAA, LODSB" value="INT">
+        <label>Opérande (optionnel)</label>
+        <input type="text" id="rb-op" placeholder="ex: 21h" value="21h">
+      </div>
+      <div>
+        <label>Code généré (transformation)</label>
+        <input type="text" id="rb-code" placeholder="ex: WriteConsoleA(hStdOut, EDX, -1, NULL, NULL)" value="INVOKE WriteConsoleA, hStdOut, EDX, -1, NULL, NULL">
+        <label>Avertissement</label>
+        <input type="text" id="rb-warn" placeholder="Message de warning" value="Vérifier hStdOut avant usage">
+        <label>ID unique</label>
+        <input type="text" id="rb-id" placeholder="identifiant_unique" value="my_custom_rule">
+      </div>
+    </div>
+    <button onclick="generateRule()">Générer la règle JSON →</button>
+    <div class="rule-output" id="rb-output" style="display:none;"></div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ PLUGINS -->
+<section id="plugins">
+  <h2>Plugins spécialisés <a href="#plugins" class="anchor-link">#</a></h2>
+  <p class="section-lead">Quatre plugins gèrent les cas particuliers qui dépassent les simples règles de remplacement d'instructions.</p>
+
+  <div class="plugin-grid">
+    <div class="plugin-card">
+      <div class="plugin-name">src/plugins/bcd_emulator.js</div>
+      <div class="plugin-title">Émulateur BCD</div>
+      <p>Gère les instructions d'arithmétique décimale codée binaire du 8086, absentes du jeu d'instructions 32-bit modern.</p>
+      <ul>
+        <li>AAA (ASCII Adjust for Addition)</li>
+        <li>AAS (ASCII Adjust for Subtraction)</li>
+        <li>AAM (ASCII Adjust for Multiply)</li>
+        <li>AAD (ASCII Adjust for Divide)</li>
+        <li>DAA / DAS (Decimal Adjust)</li>
+      </ul>
+      <p style="margin-top:10px;">Ces instructions sont émulées par des séquences équivalentes 32-bit (comparaisons, masques AL, CF/AF manipulation).</p>
+    </div>
+
+    <div class="plugin-card">
+      <div class="plugin-name">src/plugins/farcall_resolver.js</div>
+      <div class="plugin-title">Résolveur Far Calls</div>
+      <p>Gère les appels et sauts inter-segments (far calls) propres au modèle mémoire segmenté DOS, inexistants en mode FLAT Win32.</p>
+      <ul>
+        <li>CALLF (far call avec segment:offset)</li>
+        <li>JMPF (far jump)</li>
+        <li>RETF (far return)</li>
+        <li>LDS, LES (load far pointer)</li>
+      </ul>
+      <p style="margin-top:10px;">Stratégie : analyse du graphe d'appel pour convertir en CALL flat (near) quand possible, sinon marquage REVIEW.</p>
+    </div>
+
+    <div class="plugin-card">
+      <div class="plugin-name">src/plugins/iot_bridge.js</div>
+      <div class="plugin-title">Bridge IoT / Matériel</div>
+      <p>Traduit les accès hardware bas niveau DOS vers les APIs Win32 modernes. Utilise <code>config/iot_mappings.json</code>.</p>
+      <ul>
+        <li>Ports série (0x3F8/3E8) → CreateFile + ReadFile/WriteFile</li>
+        <li>Ports parallèle (0x378) → SetupComm / EscapeCommFunction</li>
+        <li>Timer 8253 (0x40-0x43) → SetTimer / timeSetEvent</li>
+        <li>Instructions IN/OUT → APIs ou DeviceIoControl</li>
+      </ul>
+    </div>
+
+    <div class="plugin-card">
+      <div class="plugin-name">src/plugins/interrupt_dispatcher.js</div>
+      <div class="plugin-title">Dispatcher d'interruptions</div>
+      <p>Analyse les interruptions DOS (INT 21h) et BIOS (INT 10h, 16h) et les mappe vers leurs équivalents Win32.</p>
+      <ul>
+        <li>INT 21h/09h → WriteConsoleA</li>
+        <li>INT 21h/3Dh → CreateFileA (open)</li>
+        <li>INT 21h/3Ch → CreateFileA (create)</li>
+        <li>INT 21h/4Ch → ExitProcess</li>
+        <li>INT 10h/0Eh → WriteConsoleA (TTY)</li>
+        <li>INT 16h/00h → ReadConsoleA</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ BACKENDS -->
+<section id="backends">
+  <h2>Backends de sortie <a href="#backends" class="anchor-link">#</a></h2>
+  <p class="section-lead">Trois formats de sortie sont disponibles, chacun ciblant un workflow différent.</p>
+
+  <div class="card-grid">
+    <div class="card card-accent">
+      <div class="card-label">Backend MASM</div>
+      <div class="card-title">masm_backend.js</div>
+      <p>Génère du code assemblable avec ML.exe (Microsoft Assembler), JWASM, ou MASM32 SDK. Syntaxe avec macros INVOKE, includes windows.inc. Format cible par défaut.</p>
+    </div>
+    <div class="card card-cyan">
+      <div class="card-label">Backend NASM</div>
+      <div class="card-title">nasm_backend.js</div>
+      <p>Génère de la syntaxe NASM libre (Netwide Assembler). Sections <code>[section .text]</code>, <code>extern</code> pour les imports DLL. Compatible Linux cross-compile.</p>
+    </div>
+    <div class="card card-purple">
+      <div class="card-label">Backend PE</div>
+      <div class="card-title">pe_backend.js</div>
+      <p>Construit directement un binaire PE (.exe) Win32 valide sans passer par un assembleur intermédiaire. Utilise <code>pe_builder.js</code> et les templates JSON.</p>
+    </div>
+  </div>
+
+  <h3>Prologue généré — Backend MASM</h3>
+<pre><span class="comment">; Généré par PaleoRevealer / Scadassembler v2.0</span>
+<span class="comment">; Source original : programme.exe (MZ) → Win32 PE</span>
+
+.386
+.MODEL FLAT, STDCALL
+OPTION CASEMAP:NONE
+
+INCLUDE windows.inc
+INCLUDE kernel32.inc
+INCLUDE user32.inc
+INCLUDELIB kernel32.lib
+INCLUDELIB user32.lib
+
+.DATA
+    <span class="comment">; Variables migrées depuis segment DATA DOS</span>
+    msg DB "Hello from migrated DOS code!", 0Dh, 0Ah, <span class="str">"$"</span>
+
+.CODE
+start:
+    <span class="comment">; Code migré — vérifier les sections marquées ;REVIEW:</span>
+    INVOKE ExitProcess, 0
+END start</pre>
+
+  <h3>Sélectionner le backend en CLI</h3>
+<pre><span class="comment"># Format MASM (défaut)</span>
+<span class="cmd">node cli.js</span> <span class="flag">-f</span> masm programme.asm
+
+<span class="comment"># Format NASM</span>
+<span class="cmd">node cli.js</span> <span class="flag">-f</span> nasm programme.asm
+
+<span class="comment"># PE binaire direct</span>
+<span class="cmd">node cli.js</span> <span class="flag">-f</span> pe <span class="flag">-o</span> programme.exe programme.asm</pre>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ UI -->
+<section id="ui">
+  <h2>Interface Web interactive <a href="#ui" class="anchor-link">#</a></h2>
+  <p class="section-lead">Le dossier <code>ui/</code> contient une interface web permettant d'utiliser PaleoRevealer directement dans le navigateur.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-label">Éditeur de code</div>
+      <div class="card-title">Coloration syntaxique</div>
+      <p>Éditeur avec coloration syntaxique pour l'assembleur x86, directement dans le navigateur.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Conversion temps réel</div>
+      <div class="card-title">Preview instantané</div>
+      <p>Aperçu de la conversion en temps réel au fur et à mesure de la saisie du code source.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Import de fichiers</div>
+      <div class="card-title">Drag & Drop</div>
+      <p>Glissez-déposez un fichier .ASM, .COM ou .EXE pour l'analyser directement.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p>L'interface web est une fonctionnalité de <strong>démonstration</strong>. Pour les conversions de production (binaires MZ, gros fichiers ASM), utilisez la CLI qui offre plus de contrôle et de robustesse.</p>
+  </div>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ CLI -->
+<section id="cli">
+  <h2>CLI — Guide complet <a href="#cli" class="anchor-link">#</a></h2>
+  <p class="section-lead">Toutes les options disponibles en ligne de commande avec leur description détaillée.</p>
+
+  <table class="rule-table">
+    <thead><tr><th>Option</th><th>Valeurs</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>-o, --output &lt;file&gt;</td><td>chemin fichier</td><td>Fichier de sortie. Par défaut : nom du fichier source + extension du format cible</td></tr>
+      <tr><td>-f, --format &lt;fmt&gt;</td><td>masm | nasm | pe</td><td>Format de sortie. <code>masm</code> par défaut. <code>pe</code> génère un binaire exécutable</td></tr>
+      <tr><td>-s, --subsystem &lt;sys&gt;</td><td>CONSOLE | WINDOWS</td><td>Sous-système PE. CONSOLE pour les apps terminales, WINDOWS pour GUI</td></tr>
+      <tr><td>--scada</td><td>flag</td><td>Active les mappings IoT/SCADA matériels (<code>iot_mappings.json</code>)</td></tr>
+      <tr><td>--report</td><td>flag</td><td>Génère un rapport JSON avec statistiques, warnings et review manuelles</td></tr>
+      <tr><td>--no-comments</td><td>flag</td><td>Supprime les commentaires de contexte dans la sortie (code plus compact)</td></tr>
+      <tr><td>--debug</td><td>flag</td><td>Verbose : affiche les règles matchées, les transformations appliquées, le CFG</td></tr>
+      <tr><td>--com-to-pe</td><td>flag</td><td>Mode de conversion binaire .COM → PE Win32</td></tr>
+      <tr><td>--mz-to-pe</td><td>flag</td><td>Mode de conversion binaire .EXE MZ → PE Win32</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ EXAMPLES -->
+<section id="examples">
+  <h2>Exemples concrets <a href="#examples" class="anchor-link">#</a></h2>
+
+  <div class="tab-wrap">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('ex-basic', 'ex')">ASM source → MASM</button>
+      <button class="tab-btn" onclick="showTab('ex-mz', 'ex')">Binaire MZ → PE</button>
+      <button class="tab-btn" onclick="showTab('ex-scada', 'ex')">Driver SCADA</button>
+      <button class="tab-btn" onclick="showTab('ex-report', 'ex')">Rapport JSON</button>
+    </div>
+    <div class="tab-panels">
+      <div class="tab-content active" id="ex-basic">
+        <p style="color:var(--muted);margin-bottom:16px;font-size:14px;">Conversion la plus courante : un fichier source assembleur DOS 16-bit vers MASM 32-bit Win32.</p>
+<pre><span class="comment">; ENTRÉE : hello_dos.asm (assembleur MS-DOS 16-bit)</span>
+.MODEL SMALL
+.STACK 100h
+.DATA
+    msg DB <span class="str">"Hello, World!"</span>, 0Dh, 0Ah, <span class="str">'$'</span>
+.CODE
+start:
+    MOV  AX, @DATA
+    MOV  DS, AX
+    MOV  AH, 09h       <span class="comment">; INT 21h fonction "Write String"</span>
+    LEA  DX, msg
+    INT  21h
+    MOV  AH, 4Ch       <span class="comment">; INT 21h fonction "Exit"</span>
+    INT  21h
+END start</pre>
+
+<pre><span class="comment">; SORTIE générée par PaleoRevealer : hello_win32.asm (MASM 32-bit)</span>
+.386
+.MODEL FLAT, STDCALL
+OPTION CASEMAP:NONE
+
+INCLUDE windows.inc
+INCLUDE kernel32.inc
+INCLUDELIB kernel32.lib
+
+.DATA
+    msg DB <span class="str">"Hello, World!"</span>, 0Dh, 0Ah, 0  <span class="comment">; '$' → terminateur null</span>
+    <span class="comment">;REVIEW: vérifier encodage de la chaîne (CP437 → UTF-8 possible)</span>
+
+.CODE
+start:
+    <span class="comment">; INT 21h/09h → WriteConsoleA</span>
+    INVOKE GetStdHandle, STD_OUTPUT_HANDLE
+    MOV   [hStdOut], EAX
+    INVOKE WriteConsoleA, [hStdOut], OFFSET msg, SIZEOF msg - 1, NULL, NULL
+
+    <span class="comment">; INT 21h/4Ch → ExitProcess</span>
+    INVOKE ExitProcess, 0
+END start</pre>
+
+<pre><span class="comment"># Commande</span>
+<span class="cmd">node cli.js</span> <span class="flag">-o</span> hello_win32.asm <span class="flag">--report</span> hello_dos.asm</pre>
+      </div>
+
+      <div class="tab-content" id="ex-mz">
+<pre><span class="comment"># Scénario : vous avez un vieux .EXE DOS sans le code source</span>
+<span class="comment"># PaleoRevealer désassemble + convertit le binaire MZ</span>
+<span class="cmd">node cli.js</span> <span class="flag">--mz-to-pe</span> <span class="flag">-o</span> moderne.exe <span class="flag">--report</span> vieux_dos.exe
+
+<span class="comment"># Ce que fait le pipeline :</span>
+<span class="comment"># 1. Lecture du header MZ (magic "MZ", pages, relocations)</span>
+<span class="comment"># 2. Extraction de l'image programme (code + data + bss)</span>
+<span class="comment"># 3. Désassemblage heuristique (détection zones code/data)</span>
+<span class="comment"># 4. Application des règles de transformation</span>
+<span class="comment"># 5. Construction d'un nouveau header PE Win32 valide</span>
+<span class="comment"># 6. Génération du binaire .exe</span></pre>
+
+        <div class="callout callout-warn">
+          <span class="callout-icon">⚠️</span>
+          <p>La désassemblage de binaires sans symboles est <strong>heuristique</strong>. Des sections de données peuvent être interprétées comme du code. Le rapport <code>--report</code> signale les zones incertaines avec des marquages <code>REVIEW</code>.</p>
+        </div>
+      </div>
+
+      <div class="tab-content" id="ex-scada">
+<pre><span class="comment"># Mode SCADA : driver matériel avec accès ports I/O</span>
+<span class="cmd">node cli.js</span> <span class="flag">--scada</span> <span class="flag">--report</span> <span class="flag">-f</span> masm <span class="flag">-s</span> CONSOLE device_driver.asm
+
+<span class="comment">; EXEMPLE : accès port série COM1 (0x3F8)</span>
+
+<span class="comment">; AVANT (DOS 16-bit) :</span>
+    MOV  DX, 0x3F8    <span class="comment">; Port COM1 - Data register</span>
+    IN   AL, DX        <span class="comment">; Lire un byte depuis COM1</span>
+
+<span class="comment">; APRÈS (généré avec --scada) :</span>
+    <span class="comment">; IN AL, COM1 → ReadFile(hCOM1, ...)</span>
+    <span class="comment">; Mapping depuis config/iot_mappings.json : 0x3F8 → COM1</span>
+    INVOKE ReadFile, [hCOM1], ADDR rx_buffer, 1, ADDR bytes_read, NULL
+
+<span class="comment"># Port timer 8253 (0x40) :</span>
+<span class="comment">; AVANT : OUT 0x40, AL → configure timer hardware</span>
+<span class="comment">; APRÈS : INVOKE timeSetEvent, period, resolution, callback, 0, TIME_PERIODIC</span></pre>
+      </div>
+
+      <div class="tab-content" id="ex-report">
+<pre><span class="comment">// Rapport JSON généré avec --report</span>
+{
+  <span class="str">"version"</span>: <span class="str">"2.0"</span>,
+  <span class="str">"source"</span>: <span class="str">"vieux_prog.asm"</span>,
+  <span class="str">"output"</span>: <span class="str">"vieux_prog_win32.asm"</span>,
+  <span class="str">"format_in"</span>: <span class="str">"MZ"</span>,
+  <span class="str">"format_out"</span>: <span class="str">"MASM"</span>,
+
+  <span class="str">"stats"</span>: {
+    <span class="str">"instructions_total"</span>: <span class="num">847</span>,
+    <span class="str">"rules_applied"</span>: <span class="num">623</span>,
+    <span class="str">"review_required"</span>: <span class="num">34</span>,
+    <span class="str">"unresolved_conflicts"</span>: <span class="num">3</span>,
+    <span class="str">"plugins_invoked"</span>: [<span class="str">"bcd_emulator"</span>, <span class="str">"interrupt_dispatcher"</span>]
+  },
+
+  <span class="str">"reviews"</span>: [
+    {
+      <span class="str">"line"</span>: <span class="num">142</span>,
+      <span class="str">"instruction"</span>: <span class="str">"CALLF 0x1234:0x5678"</span>,
+      <span class="str">"reason"</span>: <span class="str">"far call vers adresse absolue non résolvable"</span>,
+      <span class="str">"suggestion"</span>: <span class="str">"Identifier la fonction cible et créer un near call"</span>
+    }
+  ],
+
+  <span class="str">"warnings"</span>: [
+    <span class="str">"Segment DS non initialisé avant accès mémoire à la ligne 67"</span>,
+    <span class="str">"Instruction BCD AAA émulée — tester avec des valeurs BCD réelles"</span>
+  ]
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ RULES CUSTOM -->
+<section id="rules-custom">
+  <h2>Écrire ses propres règles JSON <a href="#rules-custom" class="anchor-link">#</a></h2>
+  <p class="section-lead">L'extension principale de PaleoRevealer se fait <strong>sans toucher au JavaScript</strong> : en modifiant <code>config/hierarchical_rules.json</code>. Voici le guide complet.</p>
+
+  <h3>Étape 1 — Identifier le bon niveau de priorité</h3>
+<pre><span class="comment">// Choisissez CRITICAL si votre règle doit s'appliquer avant tout</span>
+<span class="comment">// → ex: une instruction impossible à gérer autrement</span>
+
+<span class="comment">// Choisissez MEDIUM pour la plupart des conversions d'instructions</span>
+<span class="comment">// → ex: une nouvelle interruption INT à mapper</span>
+
+<span class="comment">// Choisissez LOW pour des directives ou macros complémentaires</span>
+<span class="comment">// Choisissez INFO pour un marquage/documentation seulement</span></pre>
+
+  <h3>Étape 2 — Rédiger la condition</h3>
+<pre>{
+  <span class="str">"condition"</span>: {
+    <span class="comment">// Matcher une instruction précise :</span>
+    <span class="str">"instruction"</span>: <span class="str">"LODSB"</span>,
+
+    <span class="comment">// Ou plusieurs instructions (OR) :</span>
+    <span class="str">"instruction"</span>: <span class="str">"LODSB | LODSW | LODSD"</span>,
+
+    <span class="comment">// Ou une liste :</span>
+    <span class="str">"instructions"</span>: [<span class="str">"SCASB"</span>, <span class="str">"SCASW"</span>],
+
+    <span class="comment">// Condition sur un operande :</span>
+    <span class="str">"operand_1"</span>: <span class="str">"AL"</span>,
+
+    <span class="comment">// Condition numérique :</span>
+    <span class="str">"pattern_confidence"</span>: { <span class="str">"gt"</span>: <span class="num">0.8</span> },
+
+    <span class="comment">// Condition regex :</span>
+    <span class="str">"source_line"</span>: { <span class="str">"regex"</span>: <span class="str">"^\\s*IN\\s+AL"</span>, <span class="str">"flags"</span>: <span class="str">"i"</span> }
+  }
+}</pre>
+
+  <h3>Étape 3 — Définir les transformations</h3>
+<pre>{
+  <span class="str">"transformations"</span>: {
+    <span class="comment">// Remplacement direct (string) :</span>
+    <span class="str">"replacement"</span>: <span class="str">"LODSB"</span>,   <span class="comment">// inchangé ici</span>
+
+    <span class="comment">// Séquence de lignes :</span>
+    <span class="str">"setup_code"</span>: [
+      <span class="str">"    ; Ma transformation custom"</span>,
+      <span class="str">"    INVOKE MonAPI, EAX, EBX"</span>
+    ],
+
+    <span class="comment">// Mapping de registres (appliqué par register_rules) :</span>
+    <span class="str">"register_mapping"</span>: {
+      <span class="str">"SI"</span>: <span class="str">"ESI"</span>,
+      <span class="str">"CX"</span>: <span class="str">"ECX"</span>
+    },
+
+    <span class="comment">// Template avec variables de contexte :</span>
+    <span class="str">"api_call"</span>: <span class="str">"MyAPI({operand_1}, {operand_2})"</span>
+  }
+}</pre>
+
+  <h3>Étape 4 — Ajouter la règle dans la bonne catégorie</h3>
+<pre><span class="comment">// Dans config/hierarchical_rules.json :</span>
+{
+  <span class="str">"instruction_rules"</span>: {
+    <span class="str">"_priority"</span>: <span class="str">"MEDIUM"</span>,
+    <span class="str">"_description"</span>: <span class="str">"Conversion instruction par instruction"</span>,
+    <span class="str">"rules"</span>: [
+      <span class="comment">// ... règles existantes ...</span>
+      {
+        <span class="str">"id"</span>: <span class="str">"ma_nouvelle_regle"</span>,
+        <span class="str">"name"</span>: <span class="str">"Description lisible"</span>,
+        <span class="str">"condition"</span>: { <span class="str">"instruction"</span>: <span class="str">"MON_INSTRUCTION"</span> },
+        <span class="str">"transformations"</span>: { <span class="str">"replacement"</span>: <span class="str">"INSTRUCTION_WIN32"</span> }
+      }
+    ]
+  }
+}</pre>
+
+  <div class="callout callout-tip">
+    <span class="callout-icon">💡</span>
+    <p>Après modification du JSON, relancez simplement <code>npm run test:rules</code> pour vérifier que votre règle est valide et ne crée pas de conflits avec les règles existantes.</p>
+  </div>
+
+  <h3>Ajouter des mappings IoT personnalisés</h3>
+<pre><span class="comment">// Dans config/iot_mappings.json :</span>
+{
+  <span class="str">"port_mappings"</span>: {
+    <span class="comment">// Mappage port I/O → API Win32</span>
+    <span class="str">"0x2F8"</span>: {              <span class="comment">// COM2</span>
+      <span class="str">"name"</span>: <span class="str">"COM2"</span>,
+      <span class="str">"win32_handle"</span>: <span class="str">"\\\\\\\\.\\\\COM2"</span>,
+      <span class="str">"read_api"</span>: <span class="str">"ReadFile"</span>,
+      <span class="str">"write_api"</span>: <span class="str">"WriteFile"</span>
+    },
+    <span class="str">"0x220"</span>: {              <span class="comment">// Sound Blaster (ex. pour jeux DOS)</span>
+      <span class="str">"name"</span>: <span class="str">"SoundBlaster"</span>,
+      <span class="str">"win32_api"</span>: <span class="str">"waveOut*"</span>,
+      <span class="str">"note"</span>: <span class="str">"Requires DirectSound or WaveOut API"</span>
+    }
+  }
+}</pre>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ PLUGINS EXTEND -->
+<section id="plugins-extend">
+  <h2>Étendre les plugins <a href="#plugins-extend" class="anchor-link">#</a></h2>
+  <p class="section-lead">Les plugins sont des modules JavaScript simples dans <code>src/plugins/</code>. Voici comment en créer un nouveau.</p>
+
+  <h3>Structure d'un plugin</h3>
+<pre><span class="comment">// src/plugins/mon_plugin.js</span>
+
+<span class="kw">class</span> <span class="func">MonPlugin</span> {
+  <span class="func">constructor</span>(config) {
+    <span class="comment">// config = le JSON de config/iot_mappings.json (ou autre)</span>
+    <span class="kw">this</span>.config = config;
+  }
+
+  <span class="comment">/**
+   * Méthode principale appelée par le Rule Engine
+   * @param {Object} instruction - L'instruction en cours d'analyse
+   * @param {Object} context - Contexte: registres, CFG, dataflow
+   * @returns {Object|null} - Transformation ou null si non applicable
+   */</span>
+  <span class="func">process</span>(instruction, context) {
+    <span class="comment">// Exemple : matcher une instruction spécifique</span>
+    <span class="kw">if</span> (instruction.mnemonic === <span class="str">'MON_MNEMONIC'</span>) {
+      <span class="kw">return</span> {
+        type: <span class="str">'replacement'</span>,
+        code: [
+          <span class="str">`    ; Converti par MonPlugin`</span>,
+          <span class="str">`    INVOKE MonWin32API, EAX`</span>
+        ],
+        warnings: [<span class="str">'Vérifier les paramètres de MonWin32API'</span>]
+      };
+    }
+    <span class="kw">return</span> null;  <span class="comment">// Pas applicable, passer à la règle suivante</span>
+  }
+
+  <span class="comment">/**
+   * Hook appelé en début de fichier (prologue)
+   */</span>
+  <span class="func">onFileStart</span>(context) {
+    <span class="kw">return</span> [<span class="str">'INCLUDE mon_include.inc'</span>];
+  }
+}
+
+module.exports = MonPlugin;</pre>
+
+  <h3>Enregistrer le plugin dans le pipeline</h3>
+<pre><span class="comment">// Dans src/core/converter.js, section plugins :</span>
+<span class="kw">const</span> MonPlugin = require(<span class="str">'../plugins/mon_plugin'</span>);
+
+<span class="comment">// Instanciation avec config optionnelle</span>
+<span class="kw">const</span> plugins = [
+  <span class="kw">new</span> BCDEmulator(config),
+  <span class="kw">new</span> FarCallResolver(config),
+  <span class="kw">new</span> IoTBridge(config.iot_mappings),
+  <span class="kw">new</span> InterruptDispatcher(config),
+  <span class="kw">new</span> MonPlugin(config)   <span class="comment">// ← Ajout ici</span>
+];</pre>
+
+  <div class="callout callout-info">
+    <span class="callout-icon">ℹ️</span>
+    <p>Les plugins sont appelés <strong>en premier</strong> lors de la phase 3 (Transformation), avant l'évaluation des règles JSON. Si un plugin retourne une transformation, le Rule Engine ne cherche plus de règle pour cette instruction (court-circuit).</p>
+  </div>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ BACKENDS EXTEND -->
+<section id="backends-extend">
+  <h2>Créer un nouveau backend <a href="#backends-extend" class="anchor-link">#</a></h2>
+  <p class="section-lead">Pour cibler un nouveau format de sortie (GAS, FASM, ARM, ou même du pseudo-code C), il suffit d'implémenter l'interface backend.</p>
+
+<pre><span class="comment">// src/backends/gas_backend.js — exemple pour GNU Assembler</span>
+
+<span class="kw">class</span> <span class="func">GASBackend</span> {
+  <span class="func">constructor</span>(options) {
+    <span class="kw">this</span>.options = options;
+    <span class="kw">this</span>.output = [];
+  }
+
+  <span class="comment">/** Prologue du fichier */</span>
+  <span class="func">emitPrologue</span>() {
+    <span class="kw">this</span>.output.push(<span class="str">'# Généré par PaleoRevealer — backend GAS'</span>);
+    <span class="kw">this</span>.output.push(<span class="str">'.intel_syntax noprefix'</span>);
+    <span class="kw">this</span>.output.push(<span class="str">'.section .text'</span>);
+    <span class="kw">this</span>.output.push(<span class="str">'.global _start'</span>);
+  }
+
+  <span class="comment">/** Émettre une instruction transformée */</span>
+  <span class="func">emitInstruction</span>(transformed) {
+    <span class="kw">if</span> (transformed.comment) {
+      <span class="kw">this</span>.output.push(<span class="str">`    # ${transformed.comment}`</span>);
+    }
+    <span class="kw">if</span> (transformed.review) {
+      <span class="kw">this</span>.output.push(<span class="str">`    # REVIEW: ${transformed.review}`</span>);
+    }
+    transformed.code.forEach(line => <span class="kw">this</span>.output.push(line));
+  }
+
+  <span class="comment">/** Section données */</span>
+  <span class="func">emitDataSection</span>(data) {
+    <span class="kw">this</span>.output.push(<span class="str">'.section .data'</span>);
+    data.forEach(d => {
+      <span class="kw">this</span>.output.push(<span class="str">`${d.name}: .byte ${d.values.join(', ')}`</span>);
+    });
+  }
+
+  <span class="comment">/** Épilogue */</span>
+  <span class="func">emitEpilogue</span>() {
+    <span class="kw">this</span>.output.push(<span class="str">'# Fin de la conversion'</span>);
+  }
+
+  <span class="comment">/** Retourner le code final */</span>
+  <span class="func">getOutput</span>() {
+    <span class="kw">return</span> <span class="kw">this</span>.output.join(<span class="str">'\n'</span>);
+  }
+}
+
+module.exports = GASBackend;</pre>
+
+  <h3>Enregistrer et utiliser le nouveau backend</h3>
+<pre><span class="comment">// Dans src/core/converter.js :</span>
+<span class="kw">const</span> backends = {
+  masm: require(<span class="str">'../backends/masm_backend'</span>),
+  nasm: require(<span class="str">'../backends/nasm_backend'</span>),
+  pe:   require(<span class="str">'../backends/pe_backend'</span>),
+  gas:  require(<span class="str">'../backends/gas_backend'</span>)   <span class="comment">// ← Nouveau</span>
+};
+
+<span class="comment">// Dans cli.js, ajouter l'option :</span>
+<span class="comment">// -f, --format : masm | nasm | pe | gas</span></pre>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ LIMITS -->
+<section id="limits">
+  <h2>Limites actuelles <a href="#limits" class="anchor-link">#</a></h2>
+  <p class="section-lead">PaleoRevealer est un outil puissant mais avec des contraintes inhérentes à la complexité du problème. Voici une analyse honnête des limites.</p>
+
+  <div class="limits-grid">
+    <div class="card card-danger">
+      <div class="card-label">Limite critique</div>
+      <div class="card-title">Désassemblage heuristique</div>
+      <p>Sur les binaires MZ sans symboles, la séparation code/données est heuristique. Des tableaux de données peuvent être désassemblés comme instructions, et vice versa. Le marquage <code>REVIEW</code> signal les zones douteuses mais ne les corrige pas.</p>
+    </div>
+    <div class="card card-danger">
+      <div class="card-label">Limite critique</div>
+      <div class="card-title">Pas d'émulation complète</div>
+      <p>PaleoRevealer ne simule pas l'exécution. Les programmes avec auto-modification de code, chiffrement en mémoire, ou code généré à l'exécution ne peuvent pas être convertis.</p>
+    </div>
+    <div class="card card-warn">
+      <div class="card-label">Limite importante</div>
+      <div class="card-title">Far calls complexes</div>
+      <p>Les far calls vers des adresses calculées dynamiquement (tables de vecteurs, pointeurs en RAM) ne peuvent pas être résolus statiquement. Ils sont marqués REVIEW.</p>
+    </div>
+    <div class="card card-warn">
+      <div class="card-label">Limite importante</div>
+      <div class="card-title">API Win32 limitée</div>
+      <p>Seul un sous-ensemble d'APIs Win32 est supporté dans les règles (kernel32, user32 de base). Les appels à des DLLs spécifiques (DPMI, extended INT) nécessitent des règles custom.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Limite mineure</div>
+      <div class="card-title">Pas de débogage symbolique</div>
+      <p>La conversion ne préserve pas les informations de débogage (PDB, COFF symbols). Le code généré est fonctionnellement équivalent mais sans symboles.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Limite mineure</div>
+      <div class="card-title">Instructions FPU non couvertes</div>
+      <p>Les instructions co-processeur x87 (FILD, FSTP, FMUL…) ne sont pas dans les règles par défaut. À ajouter via règles custom ou plugin.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">À noter</div>
+      <div class="card-title">Zéro dépendances</div>
+      <p>Le choix de n'avoir aucune dépendance npm simplifie le déploiement mais signifie que certaines fonctionnalités (parsing ASM avancé, désassemblage précis) sont développées from scratch sans bibliothèques éprouvées.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">À noter</div>
+      <div class="card-title">Revue manuelle requise</div>
+      <p>PaleoRevealer n'est pas un outil "fire and forget". Tout output doit être relu, testé et validé par un développeur maîtrisant l'assembleur. C'est un outil d'assistance à la migration, pas un convertisseur automatique parfait.</p>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ ROADMAP -->
+<section id="roadmap">
+  <h2>Pistes d'extension (Roadmap) <a href="#roadmap" class="anchor-link">#</a></h2>
+  <p class="section-lead">Idées et directions pour aller plus loin avec PaleoRevealer.</p>
+
+  <h3>Extensions à court terme (sans modifier le core)</h3>
+  <div class="card-grid">
+    <div class="card card-accent">
+      <div class="card-label">Règles JSON</div>
+      <div class="card-title">Couvrir x87 FPU</div>
+      <p>Ajouter une catégorie <code>fpu_rules</code> dans le JSON pour les instructions co-processeur x87 (FILD, FSTP, FMUL, FLDCW…).</p>
+    </div>
+    <div class="card card-accent">
+      <div class="card-label">Mappings IoT</div>
+      <div class="card-title">Nouveaux matériels</div>
+      <p>Enrichir <code>iot_mappings.json</code> avec des ports industriels supplémentaires : Modbus RTU, CANbus adapters, GPIO industrial.</p>
+    </div>
+    <div class="card card-cyan">
+      <div class="card-label">Nouveau plugin</div>
+      <div class="card-title">DPMI Support</div>
+      <p>Plugin pour les programmes DOS Protected Mode (DPMI) — applications DOS en mode protégé 32-bit, courantes dans les outils industriels des années 90.</p>
+    </div>
+    <div class="card card-cyan">
+      <div class="card-label">Nouveau backend</div>
+      <div class="card-title">GAS / LLVM IR</div>
+      <p>Backend GNU Assembler pour Linux (cross-compilation), ou même LLVM IR pour une optimisation ultérieure par LLVM.</p>
+    </div>
+  </div>
+
+  <h3>Extensions à moyen terme (modifications du core)</h3>
+  <div class="card-grid">
+    <div class="card card-purple">
+      <div class="card-label">Core — Analyse</div>
+      <div class="card-title">Analyse de types</div>
+      <p>Inférence de types sur les données (pointeurs, entiers, structures) à partir de l'analyse dataflow, pour générer un code Win32 plus précis.</p>
+    </div>
+    <div class="card card-purple">
+      <div class="card-label">Core — Loader</div>
+      <div class="card-title">Support NE / LE</div>
+      <p>Parser pour les formats NE (New Executable — Windows 3.x) et LE (Linear Executable — OS/2), proches du MZ mais plus complexes.</p>
+    </div>
+    <div class="card card-warn">
+      <div class="card-label">UI</div>
+      <div class="card-title">Diff visuel</div>
+      <p>Affichage côte-à-côte de l'instruction originale et de sa version convertie dans l'interface web, avec mise en évidence des règles appliquées.</p>
+    </div>
+    <div class="card card-warn">
+      <div class="card-label">Tests</div>
+      <div class="card-title">Corpus de benchmark</div>
+      <p>Constituer une bibliothèque de programmes DOS réels (libres de droits) pour benchmarker la qualité de la conversion de façon automatisée.</p>
+    </div>
+  </div>
+
+  <h3>Vision long terme — "Jurassic Mode" complet</h3>
+  <div class="card" style="border-color:rgba(74,222,128,0.2);background:rgba(74,222,128,0.03);">
+    <p style="color:var(--text);font-size:15px;line-height:1.8;">L'idée centrale du projet PaleoRevealer est de permettre la <strong>résurrection complète</strong> de programmes DOS dont le code source a été perdu. La vision à long terme inclut : un désassembleur symbolique (avec reconstruction partielle de noms de fonctions), une analyse sémantique pour identifier les algorithmes (tri, checksums, protocoles de communication), et une génération de code C moderne à partir de l'ASM converti. Un vrai "time machine" pour le code mort.</p>
+  </div>
+</section>
+
+</div><!-- /content -->
+</main>
+
+<script>
+function showTab(id, group) {
+  document.querySelectorAll(`.tab-content[id^="${group}-"]`).forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(group)) btn.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showPhase(n) {
+  document.querySelectorAll('.pipe-detail').forEach(el => el.classList.remove('visible'));
+  document.querySelectorAll('.pipe-step').forEach(el => el.classList.remove('active'));
+  document.getElementById('phase-' + n).classList.add('visible');
+  document.querySelectorAll('.pipe-step')[n-1].classList.add('active');
+}
+
+function generateRule() {
+  const cat = document.getElementById('rb-cat').value;
+  const instr = document.getElementById('rb-instr').value.trim();
+  const op = document.getElementById('rb-op').value.trim();
+  const code = document.getElementById('rb-code').value.trim();
+  const warn = document.getElementById('rb-warn').value.trim();
+  const id = document.getElementById('rb-id').value.trim() || 'custom_rule';
+
+  const condition = { instruction: instr };
+  if (op) condition.operand = op;
+
+  const rule = {
+    id: id,
+    name: `Règle custom : ${instr}${op ? ' ' + op : ''}`,
+    condition: condition,
+    transformations: {
+      setup_code: [`    ; Converti par règle custom`, `    ${code}`]
+    }
+  };
+  if (warn) rule.warnings = [warn];
+
+  const json = JSON.stringify(rule, null, 2);
+  const output = document.getElementById('rb-output');
+  output.style.display = 'block';
+  output.textContent = json;
+}
+
+// Nav active tracking
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav ul li a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    if (window.scrollY + 100 >= section.offsetTop) current = section.id;
+  });
+  navLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>
